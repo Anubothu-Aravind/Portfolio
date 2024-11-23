@@ -59,7 +59,8 @@ sr.reveal('.featured-image',{delay: 300})
 
 /* -- EDUCATION -- */
 sr.reveal('.education-box', {interval: 200})
-
+sr.reveal('.intro-card', {});
+sr.reveal('.skills-category', { interval: 200 });
 /* -- PROJECT BOX -- */
 sr.reveal('.project-box',{interval: 200})
 
