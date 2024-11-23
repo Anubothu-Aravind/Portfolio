@@ -341,7 +341,7 @@ h3{
 }
 
 /* ----- ABOUT / SKILLS BOX ----- */
-.skills-box{
+/* .skills-box{
     margin: 10px;
 }
 .skills-header{
@@ -358,7 +358,114 @@ h3{
     color: var(--color-white);
     padding: 2px 10px;
     border-radius: 5px;
-}
+} */
+  
+.about-section {
+    padding: 4rem 2rem;
+    background-color: #f8f9fa;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Introduction Card Styles */
+  .intro-card {
+    background: var(--background-white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .section-title {
+    color: var(--text-color);
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .intro-text {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .download-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .download-btn:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  /* Skills Grid Styles */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .skills-category {
+    background: var(--background-white);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+  }
+  
+  .category-title {
+    color: var(--text-color);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .skill-tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .skill-tag:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .about-section {
+      padding: 2rem 1rem;
+    }
+    
+    .skills-category {
+      padding: 1rem;
+    }
+  }
 
 /* ----- PROJECTS BOX ----- */
 .project-container{
@@ -637,4 +744,113 @@ footer{
     .input-field{
         width: 100%;
     }
+}
+/* ----- EDUCATION CONTAINER ----- */
+.education-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* ----- EDUCATION BOX ----- */
+.education-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    background: var(--color-white);
+    border-radius: 20px;
+    box-shadow: 1px 8px 10px 2px var(--first-shadow-color);
+    padding: 20px;
+    gap: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    cursor: pointer; /* Ensure the cursor indicates it's hoverable */
+}
+
+/* Hover effect for Education Box */
+.education-box:hover {
+    transform: translateY(-5px);
+}
+
+/* General styling for the education section */
+.education-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Styling for each education box */
+.education-box {
+    position: relative;
+    background: #fff; /* Default white background */
+    color: #000; /* Default black text color */
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.4s ease; /* Smooth transition */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow */
+}
+
+/* Hover effect for the entire card */
+.education-box:hover {
+    background: var(--second-color, #007BFF); /* Default blue on hover */
+    color: #fff; /* White text on hover */
+    transform: translateY(-5px); /* Lift the card slightly */
+}
+
+/* Ensure text color changes on hover */
+.education-box:hover h3,
+.education-box:hover p,
+.education-box:hover span,
+.education-box:hover label {
+    color: #fff; /* White text for all elements */
+}
+
+/* Styling for headings */
+.education-box h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000; /* Default black heading */
+    transition: color 0.4s ease;
+}
+
+/* Styling for descriptions */
+.education-box p {
+    margin-bottom: 5px;
+    color: #555; /* Default gray description */
+    transition: color 0.4s ease;
+}
+
+/* Styling for additional information */
+.education-box span,
+.education-box label {
+    display: block;
+    color: #777; /* Default lighter gray */
+    font-size: 14px;
+    transition: color 0.4s ease;
+}
+
+/* Optional hover animation for background (if needed) */
+.education-box::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--second-color, #007BFF); /* Default blue */
+    z-index: -1; /* Send background behind the content */
+    transition: transform 0.4s ease;
+    transform: scaleY(0); /* Initially hidden */
+    transform-origin: bottom; /* Animate from bottom to top */
+}
+
+.education-box:hover::after {
+    transform: scaleY(1); /* Expand to full height on hover */
 }

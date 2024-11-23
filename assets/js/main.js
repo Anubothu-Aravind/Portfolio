@@ -57,6 +57,8 @@ sr.reveal('.featured-text-btn',{delay: 200})
 sr.reveal('.social_icons',{delay: 200})
 sr.reveal('.featured-image',{delay: 300})
 
+/* -- EDUCATION -- */
+sr.reveal('.education-box', {interval: 200})
 
 /* -- PROJECT BOX -- */
 sr.reveal('.project-box',{interval: 200})
@@ -95,23 +97,25 @@ srRight.reveal('.form-control',{delay: 100})
 const sections = document.querySelectorAll('section[id]')
 
 function scrollActive() {
-const scrollY = window.scrollY;
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-menu a');
 
-sections.forEach(current =>{
-  const sectionHeight = current.offsetHeight,
-      sectionTop = current.offsetTop - 50,
-    sectionId = current.getAttribute('id')
+  let currentSection = null;
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (window.pageYOffset >= sectionTop - 50) {
+      currentSection = section.getAttribute('id');
+    }
+  });
 
-  if(scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) { 
-
-      document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.add('active-link')
-
-  }  else {
-
-    document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.remove('active-link')
-
-  }
-})
+  navLinks.forEach(link => {
+    link.classList.remove('active-link');
+    if (link.getAttribute('href').slice(1) === currentSection) {
+      link.classList.add('active-link');
+    }
+  });
 }
+
+window.addEventListener('scroll', scrollActive);
 
 window.addEventListener('scroll', scrollActive)
