@@ -41,13 +41,16 @@ html {
   width: 10px;
   border-radius: 25px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 30px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #bbb;
 }
@@ -64,9 +67,11 @@ html {
   cursor: pointer;
   transition: 0.4s;
 }
-.btn > i {
+
+.btn>i {
   margin-left: 10px;
 }
+
 .btn:hover {
   background: var(--second-color);
   color: var(--color-white);
@@ -81,6 +86,7 @@ i {
 body {
   background: var(--body-color);
 }
+
 .container {
   width: 100%;
   position: relative;
@@ -99,14 +105,17 @@ nav {
   transition: 0.3s;
   z-index: 100;
 }
+
 .nav-logo {
   position: relative;
 }
+
 .nav-name {
   font-size: 30px;
   font-weight: 600;
   color: var(--text-color-third);
 }
+
 .nav-logo span {
   position: absolute;
   top: -15px;
@@ -114,14 +123,17 @@ nav {
   font-size: 5em;
   color: var(--text-color-second);
 }
+
 .nav-menu,
 .nav_menu_list {
   display: flex;
 }
+
 .nav-menu .nav_list {
   list-style: none;
   position: relative;
 }
+
 .nav-link {
   text-decoration: none;
   color: var(--text-color-second);
@@ -129,18 +141,22 @@ nav {
   padding-inline: 15px;
   margin-inline: 20px;
 }
+
 .nav-menu-btn {
   display: none;
 }
+
 .nav-menu-btn i {
   font-size: 28px;
   cursor: pointer;
 }
+
 .active-link {
   position: relative;
   color: var(--first-color);
   transition: 0.3;
 }
+
 .active-link::after {
   content: "";
   position: absolute;
@@ -177,6 +193,7 @@ nav {
   width: 50%;
   padding-left: 20px;
 }
+
 .featured-text-card span {
   background: var(--third-color);
   color: var(--color-white);
@@ -184,37 +201,45 @@ nav {
   font-size: 12px;
   border-radius: 5px;
 }
+
 .featured-name {
   font-size: 50px;
   font-weight: 600;
   color: var(--text-color-second);
   margin-block: 20px;
 }
+
 .typedText {
   text-transform: capitalize;
   color: var(--text-color-third);
 }
+
 .featured-text-info {
   font-size: 15px;
   margin-bottom: 30px;
   color: var(--text-color-second);
 }
+
 .featured-text-btn {
   display: flex;
   gap: 20px;
 }
-.featured-text-btn > .blue-btn {
+
+.featured-text-btn>.blue-btn {
   background: var(--first-color);
   color: var(--color-white);
 }
-.featured-text-btn > .blue-btn:hover {
+
+.featured-text-btn>.blue-btn:hover {
   background: var(--first-color-hover);
 }
+
 .social_icons {
   display: flex;
   margin-top: 5em;
   gap: 30px;
 }
+
 .icon {
   display: flex;
   justify-content: center;
@@ -225,6 +250,7 @@ nav {
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 }
+
 .icon:hover {
   color: var(--first-color);
 }
@@ -237,6 +263,7 @@ nav {
   min-height: 80vh;
   width: 50%;
 }
+
 .image {
   margin: auto 0;
   width: 380px;
@@ -245,17 +272,20 @@ nav {
   overflow: hidden;
   animation: imgFloat 7s ease-in-out infinite;
 }
+
 .image img {
   width: 380px;
   height: 380px;
   object-fit: cover;
 }
+
 @keyframes imgFloat {
   50% {
     transform: translateY(10px);
     border-radius: 45% 55% 45% 55%;
   }
 }
+
 .scroll-btn {
   position: absolute;
   bottom: 0;
@@ -273,6 +303,7 @@ nav {
   border-radius: 30px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
 }
+
 .scroll-btn i {
   font-size: 20px;
 }
@@ -281,12 +312,14 @@ nav {
 .section {
   padding-block: 5em;
 }
+
 .row {
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 50px;
 }
+
 .col {
   display: flex;
   width: 50%;
@@ -297,14 +330,17 @@ nav {
   text-align: center;
   margin-bottom: 5em;
 }
+
 .top-header h1 {
   font-weight: 600;
   color: var(--text-color-second);
   margin-bottom: 10px;
 }
+
 .top-header span {
   color: #999;
 }
+
 h3 {
   font-size: 20px;
   font-weight: 600;
@@ -325,11 +361,13 @@ h3 {
   box-shadow: 1px 8px 10px 2px var(--first-shadow-color);
   border-radius: 20px;
 }
+
 .about-info p {
   text-align: center;
   font-size: 15px;
   color: #777;
 }
+
 .about-btn button {
   position: absolute;
   left: 50%;
@@ -455,12 +493,17 @@ h3 {
 .skill-tag:hover {
   transform: translateY(-2px);
 }
+
 /* Center and maintain consistent size */
 .skills-category:last-child {
-  grid-column: 1 / -1; /* Span across the full grid width */
-  justify-self: center; /* Center horizontally */
-  max-width: 75vh; /* Same width as other boxes */
-  width: 90%; /* Ensure responsive behavior */
+  grid-column: 1 / -1;
+  /* Span across the full grid width */
+  justify-self: center;
+  /* Center horizontally */
+  max-width: 75vh;
+  /* Same width as other boxes */
+  width: 90%;
+  /* Ensure responsive behavior */
 }
 
 /* Responsive Design */
@@ -486,6 +529,7 @@ h3 {
   gap: 20px;
   flex-wrap: wrap;
 }
+
 .project-box {
   position: relative;
   display: flex;
@@ -499,15 +543,18 @@ h3 {
   box-shadow: 1px 8px 10px 2px var(--first-shadow-color);
   overflow: hidden;
 }
-.project-box > i {
+
+.project-box>i {
   font-size: 50px;
   color: #00b5e7;
   margin-bottom: 25px;
 }
+
 .project-box label {
   font-size: 15px;
   color: #777;
 }
+
 .project-box::after,
 .contact-info::after {
   content: "";
@@ -519,13 +566,15 @@ h3 {
   transition: 0.4s;
   z-index: 1;
 }
+
 .project-box:hover.project-box::after,
 .contact-info:hover.contact-info::after {
   bottom: 0;
 }
+
 .project-box:hover.project-box i,
-.project-box:hover.project-box > h3,
-.project-box:hover.project-box > label {
+.project-box:hover.project-box>h3,
+.project-box:hover.project-box>label {
   color: var(--color-white);
   z-index: 2;
 }
@@ -545,23 +594,28 @@ h3 {
   box-shadow: 1px 8px 10px 2px var(--first-shadow-color);
   overflow: hidden;
 }
-.contact-info > h2 {
+
+.contact-info>h2 {
   color: var(--color-white);
   margin-bottom: 20px;
 }
-.contact-info > p {
+
+.contact-info>p {
   display: flex;
   align-items: center;
   gap: 10px;
   color: var(--color-white);
   margin-block: 5px;
 }
-.contact-info p > i {
+
+.contact-info p>i {
   font-size: 18px;
 }
+
 .contact-info::after {
   background: var(--color-white);
 }
+
 .contact-info:hover.contact-info h2,
 .contact-info:hover.contact-info p,
 .contact-info:hover.contact-info i {
@@ -576,11 +630,13 @@ h3 {
   gap: 10px;
   width: 100%;
 }
+
 .form-inputs {
   display: flex;
   gap: 10px;
   width: 100%;
 }
+
 .input-field {
   width: 50%;
   height: 55px;
@@ -590,6 +646,7 @@ h3 {
   padding-inline: 20px;
   outline: none;
 }
+
 textarea {
   width: 100%;
   height: 250px;
@@ -600,16 +657,19 @@ textarea {
   outline: none;
   resize: none;
 }
-.form-button > .btn {
+
+.form-button>.btn {
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--second-color);
   color: var(--color-white);
 }
-.form-button > .btn:hover {
+
+.form-button>.btn:hover {
   background: #00b5e7;
 }
+
 .form-button i {
   font-size: 18px;
   rotate: -45deg;
@@ -625,26 +685,32 @@ footer {
   background: #f8f8f8;
   padding-block: 40px 60px;
 }
+
 .top-footer p {
   font-size: 25px;
   font-weight: 600;
 }
+
 .middle-footer .footer-menu {
   display: flex;
 }
+
 .footer_menu_list {
   list-style: none;
 }
+
 .footer_menu_list a {
   text-decoration: none;
   color: var(--text-color-second);
   font-weight: 500;
   margin-inline: 20px;
 }
+
 .footer-social-icons {
   display: flex;
   gap: 30px;
 }
+
 .bottom-footer {
   font-size: 14px;
   margin-top: 10px;
@@ -655,6 +721,7 @@ footer {
   .featured-text {
     padding: 0;
   }
+
   .image,
   .image img {
     width: 320px;
@@ -667,9 +734,11 @@ footer {
   .nav-button {
     display: none;
   }
+
   .nav-menu.responsive {
     left: 0;
   }
+
   .nav-menu {
     position: fixed;
     top: 80px;
@@ -684,19 +753,23 @@ footer {
     height: 90vh;
     transition: 0.3s;
   }
+
   .nav_menu_list {
     flex-direction: column;
   }
+
   .nav-menu-btn {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .featured-box {
     flex-direction: column;
     justify-content: center;
     height: 100vh;
   }
+
   .featured-text {
     width: 100%;
     order: 2;
@@ -704,9 +777,11 @@ footer {
     align-content: flex-start;
     min-height: 60vh;
   }
+
   .social_icons {
     margin-top: 2em;
   }
+
   .featured-image {
     order: 1;
     justify-content: center;
@@ -714,29 +789,35 @@ footer {
     width: 100%;
     margin-top: 65px;
   }
+
   .image,
   .image img {
     width: 150px;
     height: 150px;
   }
+
   .row {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 50px;
   }
+
   .col {
     display: flex;
     justify-content: center;
     width: 100%;
   }
+
   .about-info,
   .contact-info {
     width: 100%;
   }
+
   .project-container {
     justify-content: center;
   }
+
   .project-box {
     width: 80%;
   }
@@ -748,16 +829,20 @@ footer {
   .featured-name {
     font-size: 40px;
   }
+
   .project-box {
     width: 100%;
   }
+
   .form-inputs {
     flex-direction: column;
   }
+
   .input-field {
     width: 100%;
   }
 }
+
 /* ----- EDUCATION CONTAINER ----- */
 .education-container {
   display: flex;
@@ -781,7 +866,7 @@ footer {
   gap: 20px;
   overflow: hidden;
   transition: transform 1s ease;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 /* Hover effect for Education Box */
@@ -800,13 +885,13 @@ footer {
 /* Styling for each education box */
 .education-box {
   position: relative;
-  background: #fff; 
-  color: #000; 
+  background: #fff;
+  color: #000;
   padding: 20px;
   border-radius: 10px;
   overflow: hidden;
-  transition: all 0.4s ease; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Hover effect for the entire card */
@@ -829,14 +914,14 @@ footer {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #000; 
+  color: #000;
   transition: color 0.4s ease;
 }
 
 /* Styling for descriptions */
 .education-box p {
   margin-bottom: 5px;
-  color: #555; 
+  color: #555;
   transition: color 0.4s ease;
 }
 
@@ -844,7 +929,7 @@ footer {
 .education-box span,
 .education-box label {
   display: block;
-  color: #777; 
+  color: #777;
   font-size: 14px;
   transition: color 0.4s ease;
 }
@@ -857,11 +942,11 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--second-color, #007bff); 
-  z-index: -1; 
+  background: var(--second-color, #007bff);
+  z-index: -1;
   transition: transform 0.4s ease;
-  transform: scaleY(0); 
-  transform-origin: bottom; 
+  transform: scaleY(0);
+  transform-origin: bottom;
 }
 
 /* .education-box:hover::after {
