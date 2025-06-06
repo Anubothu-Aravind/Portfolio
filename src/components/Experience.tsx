@@ -101,13 +101,13 @@ const Experience = () => {
                               </p>
                             </div>
                             
-                            {/* Debug info - remove in production */}
+                            {/* Debug info - remove in production
                             {process.env.NODE_ENV === 'development' && job.logo && (
                               <div className="text-xs text-gray-500 mt-2">
                                 Logo URL: {job.logo}
                                 {hasImageError && <span className="text-red-400 ml-2">(Failed to load)</span>}
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </div>

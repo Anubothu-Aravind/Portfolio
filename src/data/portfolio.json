@@ -167,9 +167,9 @@
         "Vercel"
       ],
       "category": "webapp",
-      "githubUrl": "https://github.com/Anubothu-Aravind/digitMind",
+      "githubUrl": "https://github.com/Anubothu-Aravind/digit-draw-verify-supabase",
       "liveUrl": "https://digit-mind.vercel.app",
-      "image": "/assets/images/projects/webapp/digit_mind.png"
+      "image": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749228528/digitmind_awz7g3.png"
     },
     {
       "title": "Live Audio Event Detection App",
@@ -182,8 +182,7 @@
         "Heroku"
       ],
       "category": "opencv",
-      "githubUrl": "https://github.com/Anubothu-Aravind/audio-detection",
-      "liveUrl": "https://audio-event-detection.herokuapp.com",
+      "githubUrl": "https://github.com/Anubothu-Aravind/Emotion-Classification-using-audio",
       "image": "/assets/images/projects/opencv/audio_detection.png"
     },
     {
@@ -199,7 +198,93 @@
       "category": "webapp",
       "githubUrl": "https://github.com/Anubothu-Aravind/code-assistant",
       "image": "/assets/images/projects/webapp/code_assistant.png"
-    }
+    },
+    {
+  "title": "Reportify – Student Attendance Report Generator",
+  "description": "A Streamlit-based tool that processes student attendance CSVs and generates downloadable PDF reports and ZIP bundles with attendance insights.",
+  "technologies": [
+    "Python",
+    "Streamlit",
+    "FPDF",
+    "Pandas",
+    "Docker"
+  ],
+  "category": "webapp",
+  "githubUrl": "https://github.com/Anubothu-Aravind/Reportify",
+  "image": "/assets/images/projects/webapp/reportify.png"
+},
+{
+  "title": "JPEG File Extractor and Copier",
+  "description": "A Python utility to extract and copy `.jpg` or `.jpeg` files from a directory based on their last modified date into a timestamped folder.",
+  "technologies": [
+    "Python",
+    "os",
+    "shutil",
+    "datetime"
+  ],
+  "category": "automation",
+  "githubUrl": "https://github.com/Anubothu-Aravind/Jpeg-jpg_extractor",
+  "image": "/assets/images/projects/automation/jpeg_extractor.png"
+},
+{
+  "title": "Student Timetable Management System",
+  "description": "A comprehensive web application for managing student timetables with authentication, admin controls, file upload processing, schedule checking, and data analysis features. Supports batch-wise student management and availability tracking.",
+  "technologies": [
+    "Python",
+    "Streamlit",
+    "Pandas",
+    "Supabase",
+    "SMTP",
+    "hashlib",
+    "datetime",
+    "re"
+  ],
+  "category": "web-application",
+  "githubUrl": "https://github.com/Anubothu-Aravind/Timetable",
+  "image": "/assets/images/projects/web-application/timetable_system.png"
+},
+{
+  "title": "TalentTrack: ATS Resume Analyzer",
+  "description": "A Streamlit-based ATS tool that uses Google Gemini to evaluate resumes against job descriptions, suggest improvements, and calculate match percentages.",
+  "technologies": [
+    "Streamlit",
+    "Google Gemini API",
+    "PyPDF2",
+    "Python-dotenv"
+  ],
+  "category": "webapp",
+  "githubUrl": "https://github.com/Anubothu-Aravind/Talent_Track",
+  "image": "/assets/images/projects/webapp/talenttrack.png"
+},
+{
+  "title": "Automated Certificate Generator",
+  "description": "A Django-based tool for generating personalized event certificates from CSV data and sending them via email. Integrates certificate design, data handling, and automated email dispatch.",
+  "technologies": [
+    "Django",
+    "Pillow",
+    "pandas",
+    "CSV",
+    "Gmail SMTP"
+  ],
+  "category": "automation",
+  "githubUrl": "https://github.com/Intelligentsia-Club/certificate",
+  "image": "/assets/images/projects/automation/certificate_generator.png"
+},
+{
+  "title": "Email Automation for Intelligentsia Club Collaborations",
+  "description": "Automates the generation and sending of personalized HTML emails for outreach, using Excel drafts and Microsoft Outlook integration.",
+  "technologies": [
+    "Python",
+    "Pandas",
+    "OpenPyXL",
+    "pywin32",
+    "Microsoft Outlook"
+  ],
+  "category": "automation",
+  "githubUrl": "https://github.com/Anubothu-Aravind/mails_sender",
+  "image": "/assets/images/projects/automation/mails_sender.png"
+}
+
   ],
   "experience": [
     {
@@ -310,61 +395,61 @@
     }
   ],
   "certificates": [
-    {
-      "name": "Salesforce AI Associate Certification",
-      "issuer": "Salesforce",
-      "date": "2024",
-      "description": "Certified Salesforce AI Associate with understanding of ethical AI use, Einstein tools, and practical CRM applications.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png"
-    },
-    {
-      "name": "AWS Certified Cloud Practitioner",
-      "issuer": "Amazon Web Services (AWS)",
-      "date": "2024",
-      "description": "Validated AWS Cloud fundamentals including billing, security, and core services like EC2, S3, and RDS.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png"
-    },
-    {
-      "name": "IBM Python for Data Science (CEPYTIIN)",
-      "issuer": "IBM Skills Network",
-      "date": "2024",
-      "description": "Hands-on course on Python for Data Science, covering libraries like Pandas, NumPy, and visualization tools.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png"
-    },
-    {
-      "name": "Python (Basic)",
-      "issuer": "HackerRank",
-      "date": "2024",
-      "description": "Demonstrated core Python programming and logical problem-solving skills through HackerRank certification.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png"
-    },
-    {
-      "name": "Problem Solving (Basic)",
-      "issuer": "HackerRank",
-      "date": "2024",
-      "description": "Certified for fundamental algorithmic thinking and logical problem solving on HackerRank platform.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png"
-    },
-    {
-      "name": "Aviatrix Certified Engineer – Multicloud Network Associate",
-      "issuer": "Aviatrix",
-      "date": "2024",
-      "description": "Earned certification in multicloud network architecture, secure routing, and cloud-native networking using Aviatrix.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png"
-    },
-    {
-      "name": "Certified Essentials Automation Professional",
-      "issuer": "Automation Anywhere",
-      "date": "2024",
-      "description": "Completed foundational certification on RPA concepts, bots, and automation workflows using Automation Anywhere platform.",
-      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png",
-      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png"
-    }
-  ]
+  {
+    "name": "Aviatrix Certified Engineer – Multicloud Network Associate",
+    "issuer": "Aviatrix",
+    "date": "2025",
+    "description": "Earned certification in multicloud network architecture, secure routing, and cloud-native networking using Aviatrix.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png"
+  },
+  {
+    "name": "Certified Essentials Automation Professional",
+    "issuer": "Automation Anywhere",
+    "date": "2025",
+    "description": "Completed foundational certification on RPA concepts, bots, and automation workflows using Automation Anywhere platform.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png"
+  },
+  {
+    "name": "Salesforce AI Associate Certification",
+    "issuer": "Salesforce",
+    "date": "2024",
+    "description": "Certified Salesforce AI Associate with understanding of ethical AI use, Einstein tools, and practical CRM applications.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png"
+  },
+  {
+    "name": "AWS Certified Cloud Practitioner",
+    "issuer": "Amazon Web Services (AWS)",
+    "date": "2024",
+    "description": "Validated AWS Cloud fundamentals including billing, security, and core services like EC2, S3, and RDS.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png"
+  },
+  {
+    "name": "IBM Python for Data Science (CEPYTIIN)",
+    "issuer": "IBM Skills Network",
+    "date": "2023",
+    "description": "Hands-on course on Python for Data Science, covering libraries like Pandas, NumPy, and visualization tools.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png"
+  },
+  {
+    "name": "Python (Basic)",
+    "issuer": "HackerRank",
+    "date": "2023",
+    "description": "Demonstrated core Python programming and logical problem-solving skills through HackerRank certification.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png"
+  },
+  {
+    "name": "Problem Solving (Basic)",
+    "issuer": "HackerRank",
+    "date": "2023",
+    "description": "Certified for fundamental algorithmic thinking and logical problem solving on HackerRank platform.",
+    "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png",
+    "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png"
+  }
+]
 }

@@ -137,8 +137,9 @@ const Contact = () => {
                   <div className="mb-3 text-green-600">
                     <Mail className="w-12 h-12 mx-auto mb-3" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Message Sent!</h3>
-                  <p className="text-gray-600">Thanks for reaching out! I'll get back to you soon.</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">The raven has flown!</h3>
+<p className="text-gray-600">Your message is heard. A reply is coming.</p>
+
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
