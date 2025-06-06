@@ -1,0 +1,370 @@
+
+{
+  "personal": {
+    "name": "Anubothu Aravind",
+    "title": "AI & Full Stack Enthusiast | DevOps Practitioner | Co - Founder @ Intelligentsia Club",
+    "email": "aanubothu@gmail.com",
+    "phone": "+91 8374005347",
+    "location": "Tenali , AP",
+    "linkedin": "https://linkedin.com/in/anubothu-aravind",
+    "github": "https://github.com/Anubothu-Aravind",
+    "profileImage": "/assets/images/personal/aravind.png"
+  },
+  "about": {
+    "summary": "I'm Aravind, a passionate B.Tech student in Artificial Intelligence & Data Science at KL University, known for building intelligent systems that solve real-world problems. As the founder of Intelligentsia Club, I lead innovative initiatives that blend AI, Web Development, and DevOps. My work ranges from deploying ML-powered apps to building dynamic automation pipelines. I believe in ethical innovation, collaborative growth, and lifelong learning."
+  },
+  "skills": [
+    {
+      "category": "Programming",
+      "items": [
+        {
+          "name": "HTML",
+          "level": 80,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140056/HTML5_fj9l8q.svg"
+        },
+        {
+          "name": "CSS",
+          "level": 70,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140091/CSS3_u9xrwl.svg"
+        },
+        {
+          "name": "JavaScript",
+          "level": 60,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139881/JavaScript_zicucg.svg"
+        },
+        {
+          "name": "Python",
+          "level": 85,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139840/Python_dlhkac.svg"
+        },
+        {
+          "name": "FastAPI",
+          "level": 80,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140143/FastAPI_d0o2ql.svg"
+        }
+      ]
+    },
+    {
+      "category": "Web Development",
+      "items": [
+        {
+          "name": "React",
+          "level": 75,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139651/react_lkipnu.svg"
+        },
+        {
+          "name": "Streamlit",
+          "level": 70,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139716/Streamlit_fwnqcx.svg"
+        },
+        {
+          "name": "Flask",
+          "level": 60,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139797/Flask_ztmwnn.svg"
+        },
+        {
+          "name": "Django",
+          "level": 65,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749139599/django_ezqsvt.svg"
+        }
+      ]
+    },
+    {
+      "category": "AI/ML & DevOps",
+      "items": [
+        {
+          "name": "NumPy",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140226/NumPy_bakqjs.svg"
+        },
+        {
+          "name": "Pandas",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140255/Pandas_bxmrm0.svg"
+        },
+        {
+          "name": "Scikit-learn",
+          "level": 80,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140290/scikit-learn_bqw8wj.svg"
+        },
+        {
+          "name": "Docker",
+          "level": 70,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140328/Docker_kkgtam.svg"
+        },
+        {
+          "name": "Jenkins",
+          "level": 75,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140452/Jenkins_iqmzaq.svg"
+        }
+      ]
+    },
+    {
+      "category": "Cloud & Databases",
+      "items": [
+        {
+          "name": "AWS",
+          "level": 78,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140485/AWS_ag3rhb.svg"
+        },
+        {
+          "name": "Supabase",
+          "level": 85,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140570/icons8-supabase_yat4ze.svg"
+        },
+        {
+          "name": "PostgreSQL",
+          "level": 80,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140613/PostgresSQL_dxy1r7.svg"
+        },
+        {
+          "name": "MySql",
+          "level": 70,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140654/MySQL_i3xyru.svg"
+        },
+        {
+          "name": "MongoDB",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140926/MongoDB_piswb7.svg"
+        }
+      ]
+    },
+    {
+      "category": "Others",
+      "items": [
+        {
+          "name": "Git",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749140997/Git_s5lpcs.svg"
+        },
+        {
+          "name": "GitHub",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749141012/GitHub_fqfjyx.svg"
+        },
+        {
+          "name": "Machine Learning",
+          "level": 72,
+          "icon": "https://img.icons8.com/ios/50/machine-learning.png"
+        },
+        {
+          "name": "Figma",
+          "level": 72,
+          "icon": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749141376/Figma_ypiixq.svg"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "DigitMind – Handwritten Digit Recognizer",
+      "description": "Built an interactive digit drawing app using React and Supabase backend. Integrated a trained ANN model (NumPy-based) for digit prediction with real-time recognition capabilities.",
+      "technologies": [
+        "React",
+        "Supabase",
+        "Python",
+        "NumPy",
+        "Vercel"
+      ],
+      "category": "webapp",
+      "githubUrl": "https://github.com/Anubothu-Aravind/digitMind",
+      "liveUrl": "https://digit-mind.vercel.app",
+      "image": "/assets/images/projects/webapp/digit_mind.png"
+    },
+    {
+      "title": "Live Audio Event Detection App",
+      "description": "Streamlit-based app that listens to live audio and identifies events in real-time. Used custom voice detection logic and speech recognition for accurate event classification.",
+      "technologies": [
+        "Python",
+        "Streamlit",
+        "PyShine",
+        "Speech Recognition",
+        "Heroku"
+      ],
+      "category": "opencv",
+      "githubUrl": "https://github.com/Anubothu-Aravind/audio-detection",
+      "liveUrl": "https://audio-event-detection.herokuapp.com",
+      "image": "/assets/images/projects/opencv/audio_detection.png"
+    },
+    {
+      "title": "Code Generation Assistant",
+      "description": "A full-stack tool using LLMs (Qwen 2.5) + LangChain to generate and review code. Built with FastAPI backend and a Streamlit-based frontend for seamless code generation workflow.",
+      "technologies": [
+        "FastAPI",
+        "Streamlit",
+        "LangChain",
+        "Qwen-2.5-Coder-3B",
+        "Hugging Face"
+      ],
+      "category": "webapp",
+      "githubUrl": "https://github.com/Anubothu-Aravind/code-assistant",
+      "image": "/assets/images/projects/webapp/code_assistant.png"
+    }
+  ],
+  "experience": [
+    {
+      "position": "Director of Technology",
+      "company": "Kognitiv Club",
+      "duration": "Aug 2024 – May 2025",
+      "location": "Vijayawada, Andhra Pradesh, India",
+      "type": "Leadership | Technical",
+      "description": "Led the club's technological initiatives and supervised project development in AI and emerging tech domains. Mentored peers, streamlined tech workflows, and managed the development of AI-powered tools to support club operations and events.",
+      "technologies": [
+        "Python",
+        "React",
+        "Streamlit",
+        "Firebase"
+      ],
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749223327/kognitiv_kwtojj.jpg"
+    },
+    {
+      "position": "Cloud Computing Intern",
+      "company": "EduSkills Foundation",
+      "duration": "Jan 2024 — Mar 2024",
+      "location": "Virtual",
+      "type": "Technical",
+      "description": "Completed a comprehensive 10-week internship focused on AWS Cloud Foundations. Gained hands-on experience with core AWS services and collaborated on cloud migration and scalable application projects.",
+      "technologies": [
+        "AWS EC2",
+        "S3",
+        "RDS",
+        "IAM",
+        "CloudWatch"
+      ],
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749223256/eduskills_lrvmcg.jpg"
+    },
+    {
+      "position": "Social Intern",
+      "company": "KL SAC",
+      "duration": "April - 2023 to May - 2023",
+      "location": "Yerragondapalem",
+      "type": "Social Service",
+      "description": "Led and participated in a 10-day tribal welfare awareness initiative focused on health, education, and digital literacy in underserved areas. Developed strong interpersonal and community engagement skills.",
+      "technologies": [
+        "Data collection",
+        "Survey forms",
+        "Basic digital literacy tools"
+      ],
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749222057/sac_ucdogt.png"
+    },
+    {
+      "position": "Hackathon Participant - Runner Up",
+      "company": "KL SWECHA",
+      "duration": "2022",
+      "location": "KL University",
+      "type": "Technical",
+      "description": "Secured Runner-Up position in a competitive hackathon organized by KL SWECHA. Worked in a collaborative team environment to build a socially impactful tech solution within a limited timeframe, demonstrating strong technical and problem-solving skills.",
+      "technologies": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Git",
+        "GitHub"
+      ],
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749223179/swecha_white_xdon6d.jpg"
+    },
+    {
+      "position": "Hackathon Participant",
+      "company": "Zero One Club - KL SAC",
+      "duration": "2022",
+      "location": "KL University",
+      "type": "Technical",
+      "description": "Participated in a university-level hackathon organized by Zero One Club under KL SAC. Collaborated with a team to develop an innovative technical solution within a limited time frame, showcasing problem-solving, programming, and teamwork skills.",
+      "technologies": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Git",
+        "GitHub"
+      ],
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749222057/sac_ucdogt.png"
+    }
+  ],
+  "education": [
+    {
+      "degree": "B.Tech – Artificial Intelligence & Data Science",
+      "institution": "KL University",
+      "duration": "2022 – present",
+      "location": "Vaddeswaram, Vijayawada, Andhra Pradesh",
+      "gpa": "9.6/10",
+      "description": "Pursuing undergraduate studies with a focus on AI, Machine Learning, and Full Stack Development. Actively involved in technical clubs, events, and project-based learning.",
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749224760/kl_kk49ek.jpg"
+    },
+    {
+      "degree": "Higher Secondary Education (12th Grade)",
+      "institution": "Shri Ram Global School",
+      "duration": "2020 – 2022",
+      "location": "Bangalore, Karnataka",
+      "gpa": "72%",
+      "description": "Completed CBSE curriculum in the PCM-CS stream. Built foundational knowledge in Computer Science, Mathematics, and logical thinking.",
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749224581/cropped-LOGO-2_wrosng.svg"
+    },
+    {
+      "degree": "Secondary Education (10th Grade)",
+      "institution": "Narayana E–Techno School",
+      "duration": "– 2020",
+      "location": "Tenali, Andhra Pradesh",
+      "gpa": "98%",
+      "description": "Completed 10th grade with excellent academic standing. Strong foundation in core subjects and early exposure to technology concepts.",
+      "logo": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749223726/idezPYE0dj_1749223716931_qnnymd.jpg"
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Salesforce AI Associate Certification",
+      "issuer": "Salesforce",
+      "date": "2024",
+      "description": "Certified Salesforce AI Associate with understanding of ethical AI use, Einstein tools, and practical CRM applications.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226452/2200080137_Salesforces_AIAssociate_20241026-1_fqujly.png"
+    },
+    {
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "Amazon Web Services (AWS)",
+      "date": "2024",
+      "description": "Validated AWS Cloud fundamentals including billing, security, and core services like EC2, S3, and RDS.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226448/2200080137_AWS_Certified_Cloud_Practitioner_certificate_1_-1_gnipbb.png"
+    },
+    {
+      "name": "IBM Python for Data Science (CEPYTIIN)",
+      "issuer": "IBM Skills Network",
+      "date": "2024",
+      "description": "Hands-on course on Python for Data Science, covering libraries like Pandas, NumPy, and visualization tools.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_IBMCE_CEPYT1IN_Certificate___IBM-1_vjkpbm.png"
+    },
+    {
+      "name": "Python (Basic)",
+      "issuer": "HackerRank",
+      "date": "2024",
+      "description": "Demonstrated core Python programming and logical problem-solving skills through HackerRank certification.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/python_basic_certificate-1_s4t4tf.png"
+    },
+    {
+      "name": "Problem Solving (Basic)",
+      "issuer": "HackerRank",
+      "date": "2024",
+      "description": "Certified for fundamental algorithmic thinking and logical problem solving on HackerRank platform.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226457/problem_solving_basic_certificate-1_qa56d8.png"
+    },
+    {
+      "name": "Aviatrix Certified Engineer – Multicloud Network Associate",
+      "issuer": "Aviatrix",
+      "date": "2024",
+      "description": "Earned certification in multicloud network architecture, secure routing, and cloud-native networking using Aviatrix.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226143/2200080137_MultiCloudNetwork-1_fnusnn.png"
+    },
+    {
+      "name": "Certified Essentials Automation Professional",
+      "issuer": "Automation Anywhere",
+      "date": "2024",
+      "description": "Completed foundational certification on RPA concepts, bots, and automation workflows using Automation Anywhere platform.",
+      "credentialUrl": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png",
+      "certificateImage": "https://res.cloudinary.com/dhsw1nyfx/image/upload/v1749226450/2200080137_Essentials_Automation_Certification_2024-1_vfijsh.png"
+    }
+  ]
+}
