@@ -162,7 +162,7 @@ export function Terminal() {
             </div>
             <div style={{ marginTop: "4px" }}>
               {entry.output === null ? (
-                <LoadingSpinner />
+                renderCommandSkeleton(entry.cmd)
               ) : (
                 entry.output
               )}
@@ -270,6 +270,36 @@ export function Terminal() {
         </div>
       )}
     </TerminalWindow>
+  );
+}
+
+function renderCommandSkeleton(cmd: string) {
+  const baseCmd = cmd.trim().split(" ")[0].toLowerCase();
+  const listCommands = ["certs", "certifications", "projects", "experience", "work"];
+  
+  if (!listCommands.includes(baseCmd)) {
+    return <LoadingSpinner />;
+  }
+
+  return (
+    <div style={{ maxWidth: "600px", marginTop: "10px" }}>
+      <div style={{ display: "flex", gap: "12px", marginBottom: "8px", borderBottom: "1px dashed var(--t-dimmer)", paddingBottom: "6px" }}>
+        <div className="skeleton-shimmer" style={{ width: "80px", height: "14px" }} />
+        <div className="skeleton-shimmer" style={{ width: "200px", height: "14px" }} />
+        <div className="skeleton-shimmer" style={{ width: "100px", height: "14px" }} />
+        <div className="skeleton-shimmer" style={{ width: "120px", height: "14px" }} />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <div className="skeleton-shimmer" style={{ width: "80px", height: "12px" }} />
+            <div className="skeleton-shimmer" style={{ width: "200px", height: "12px" }} />
+            <div className="skeleton-shimmer" style={{ width: "100px", height: "12px" }} />
+            <div className="skeleton-shimmer" style={{ width: "120px", height: "12px" }} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

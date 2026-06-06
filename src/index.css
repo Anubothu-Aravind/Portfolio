@@ -642,3 +642,74 @@
   animation: none !important;
   transition: none !important;
 }
+
+/* 8. Skeleton Shimmer & Modal Crossfade Styles */
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    var(--t-dimmer) 25%,
+    var(--t-dim) 50%,
+    var(--t-dimmer) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.4s infinite linear;
+  border-radius: 2px;
+  height: 12px;
+}
+
+/* Certificate image preview absolute container positioning for smooth crossfade */
+.cert-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  min-height: 200px;
+  border: 1px solid var(--t-dimmer);
+  background: var(--t-surface);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-image-skeleton {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  color: var(--t-text-mid);
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 2;
+  background: var(--t-surface);
+  padding: 20px;
+}
+
+.cert-image-skeleton.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cert-image-content {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cert-image-content.fade-in {
+  opacity: 1;
+}

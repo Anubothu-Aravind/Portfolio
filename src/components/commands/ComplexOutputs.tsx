@@ -128,6 +128,62 @@ export const CertsOutput = ({ onExecuteCmd }: OutputProps) => {
   );
 };
 
+interface CertImageLoaderProps {
+  src: string;
+  alt: string;
+  onError: () => void;
+}
+
+const CertImageLoader = ({ src, alt, onError }: CertImageLoaderProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [meetsMinTime, setMeetsMinTime] = useState(false);
+
+  // ASCII block characters cycling
+  const blocks = ["░", "▒", "█", "▒"];
+  const [blockIdx, setBlockIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBlockIdx((prev) => (prev + 1) % blocks.length);
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setImageLoaded(false);
+    setMeetsMinTime(false);
+    const timer = setTimeout(() => {
+      setMeetsMinTime(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [src]);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
+  const showRealImage = imageLoaded && meetsMinTime;
+  const blockChar = blocks[blockIdx];
+  const loaderText = `LOADING CERTIFICATE [ ${blockChar} ]`;
+
+  return (
+    <div className="cert-image-wrapper">
+      <div className={`cert-image-skeleton ${showRealImage ? "fade-out" : ""}`}>
+        <div style={{ fontFamily: "monospace", fontSize: "13px" }}>
+          {loaderText}
+        </div>
+      </div>
+      <img
+        src={src}
+        alt={alt}
+        onLoad={handleImageLoad}
+        onError={onError}
+        className={`cert-image-content ${showRealImage ? "fade-in" : ""}`}
+      />
+    </div>
+  );
+};
+
 export const CertDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
   const [showPreview, setShowPreview] = useState(false);
   const keyword = (args || "").trim().toLowerCase();
@@ -225,28 +281,15 @@ export const CertDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
                   [Hide Preview]
                 </span>
               </div>
-              <div style={{
-                border: "1px solid var(--t-border)",
-                padding: "6px",
-                background: "var(--t-surface)",
-                maxWidth: "100%",
-                width: "480px"
-              }}>
-                <img
-                  src={previewSrc}
-                  alt={cert.title}
-                  onError={() => {
-                    if (previewSrc !== cert.fallbackUrl) {
-                      setPreviewSrc(cert.fallbackUrl);
-                    }
-                  }}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    display: "block"
-                  }}
-                />
-              </div>
+              <CertImageLoader
+                src={previewSrc}
+                alt={cert.title}
+                onError={() => {
+                  if (previewSrc !== cert.fallbackUrl) {
+                    setPreviewSrc(cert.fallbackUrl);
+                  }
+                }}
+              />
             </div>
           ) : (
             <span className="cmd-link" onClick={() => setShowPreview(true)}>
