@@ -3,6 +3,7 @@ import { useTerminal } from "@/hooks/useTerminal";
 import { WelcomeDashboard } from "./commands/Outputs";
 import { ASCII_BANNER, ASCII_BANNER_SMALL, DASHBOARD_ITEMS } from "./commands/constants";
 import { TerminalWindow } from "./TerminalWindow";
+import { MatrixRain } from "./MatrixRain";
 
 export function Terminal() {
   const {
@@ -129,8 +130,10 @@ export function Terminal() {
   };
 
   return (
-    <TerminalWindow theme={theme} className={`${sweepActive ? "theme-sweep-active" : ""} ${lowBandwidthMode ? "low-bandwidth" : ""}`}>
-      <div className="terminal-body" ref={bodyRef}>
+    <>
+      <MatrixRain active={theme === "matrix"} />
+      <TerminalWindow theme={theme} className={`${sweepActive ? "theme-sweep-active" : ""} ${lowBandwidthMode ? "low-bandwidth" : ""}`}>
+        <div className="terminal-body" ref={bodyRef}>
         
         {/* Banner */}
         <div className="hidden md:block">
@@ -269,7 +272,8 @@ export function Terminal() {
           </div>
         </div>
       )}
-    </TerminalWindow>
+      </TerminalWindow>
+    </>
   );
 }
 

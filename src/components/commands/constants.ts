@@ -20,7 +20,7 @@ export const COMMAND_LIST = [
   "experience", "education", "certs", "contact", "socials", "neofetch",
   "summary", "highlights", "hire", "timeline", "showcase", "theme",
   "resume", "cv", "download", "photo", "avatar", "headshot", "repo",
-  "banner", "cowsay", "clear", "history",
+  "banner", "cowsay", "clear", "history", "snake",
 ] as const;
 
 export const DASHBOARD_ITEMS = [

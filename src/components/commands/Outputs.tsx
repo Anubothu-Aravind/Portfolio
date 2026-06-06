@@ -133,6 +133,12 @@ export const HelpOutput = ({ onExecuteCmd }: OutputProps) => {
         { name: "cowsay <msg>", desc: "Get wise words from a terminal cow" },
       ],
     },
+    {
+      title: "Interactive Fun",
+      cmds: [
+        { name: "snake", desc: "Play the retro terminal snake minigame" },
+      ],
+    },
   ];
 
   return (

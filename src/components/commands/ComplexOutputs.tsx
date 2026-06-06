@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { personal, education, experience, projects, capabilities, certifications } from "@/data/portfolio";
 import { ProfileImage, getStaggerStyle } from "./Outputs";
 
@@ -652,6 +652,210 @@ export const ShowcaseOutput = ({ onExecuteCmd }: OutputProps) => {
           </div>
         ))}
       </div>
+    </div>
+  );
+};
+
+export const SnakeGame = () => {
+  const WIDTH = 20;
+  const HEIGHT = 10;
+  const [snake, setSnake] = useState<[number, number][]>([[10, 5], [9, 5], [8, 5]]);
+  const [food, setFood] = useState<[number, number]>([5, 5]);
+  const [dir, setDir] = useState<"R" | "L" | "U" | "D">("R");
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const gameRef = useRef<HTMLDivElement>(null);
+
+  // Focus utility to capture keyboard arrow keys
+  useEffect(() => {
+    if (isPlaying && gameRef.current) {
+      gameRef.current.focus();
+    }
+  }, [isPlaying]);
+
+  // Handle arrow key presses
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isPlaying || gameOver) return;
+    if (e.key === "ArrowUp" && dir !== "D") setDir("U");
+    if (e.key === "ArrowDown" && dir !== "U") setDir("D");
+    if (e.key === "ArrowLeft" && dir !== "R") setDir("L");
+    if (e.key === "ArrowRight" && dir !== "L") setDir("R");
+    e.preventDefault();
+  };
+
+  // Game Loop
+  useEffect(() => {
+    if (!isPlaying || gameOver) return;
+
+    const spawnFood = (currentSnake: [number, number][]): [number, number] => {
+      while (true) {
+        const fx = Math.floor(Math.random() * WIDTH);
+        const fy = Math.floor(Math.random() * HEIGHT);
+        if (!currentSnake.some(([sx, sy]) => sx === fx && sy === fy)) {
+          return [fx, fy];
+        }
+      }
+    };
+
+    const interval = setInterval(() => {
+      setSnake((prevSnake) => {
+        const head = prevSnake[0];
+        let newHead: [number, number];
+        if (dir === "R") newHead = [head[0] + 1, head[1]];
+        else if (dir === "L") newHead = [head[0] - 1, head[1]];
+        else if (dir === "U") newHead = [head[0], head[1] - 1];
+        else newHead = [head[0], head[1] + 1];
+
+        // Wall collision
+        if (newHead[0] < 0 || newHead[0] >= WIDTH || newHead[1] < 0 || newHead[1] >= HEIGHT) {
+          console.log("Snake Wall Collision:", newHead, "Width:", WIDTH, "Height:", HEIGHT);
+          setGameOver(true);
+          clearInterval(interval);
+          return prevSnake;
+        }
+
+        // Self collision
+        if (prevSnake.some(([x, y]) => x === newHead[0] && y === newHead[1])) {
+          console.log("Snake Self Collision:", newHead, "Snake:", prevSnake);
+          setGameOver(true);
+          clearInterval(interval);
+          return prevSnake;
+        }
+
+        const newSnake = [newHead, ...prevSnake];
+
+        // Food collision
+        if (newHead[0] === food[0] && newHead[1] === food[1]) {
+          setScore((s) => s + 10);
+          setFood(spawnFood(newSnake));
+        } else {
+          newSnake.pop();
+        }
+
+        return newSnake;
+      });
+    }, 180);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, gameOver, dir, food]);
+
+  const resetGame = () => {
+    setSnake([[10, 5], [9, 5], [8, 5]]);
+    setFood([5, 5]);
+    setDir("R");
+    setGameOver(false);
+    setScore(0);
+    setIsPlaying(true);
+  };
+
+  // Render Grid
+  const renderGrid = () => {
+    const lines: string[] = [];
+    for (let y = 0; y < HEIGHT; y++) {
+      let line = "";
+      for (let x = 0; x < WIDTH; x++) {
+        if (snake[0][0] === x && snake[0][1] === y) {
+          line += "▣"; // Snake Head
+        } else if (snake.some(([sx, sy]) => sx === x && sy === y)) {
+          line += "■"; // Snake Body
+        } else if (food[0] === x && food[1] === y) {
+          line += "★"; // Food
+        } else {
+          line += "·"; // Empty space indicator
+        }
+      }
+      lines.push(line);
+    }
+    return lines.join("\n");
+  };
+
+  return (
+    <div
+      ref={gameRef}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      style={{
+        outline: "none",
+        border: "1px solid var(--t-border)",
+        background: "var(--t-surface)",
+        padding: "12px",
+        maxWidth: "360px",
+        margin: "10px 0"
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontWeight: "bold" }}>
+        <span style={{ color: "var(--t-accent)" }}>RETRO SNAKE GAME</span>
+        <span>SCORE: {score}</span>
+      </div>
+
+      {!isPlaying && !gameOver ? (
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <button
+            className="cmd-link"
+            onClick={() => setIsPlaying(true)}
+            style={{ fontSize: "14px", background: "none", border: "none" }}
+          >
+            [ START GAME ]
+          </button>
+          <div style={{ color: "var(--t-dim)", fontSize: "11px", marginTop: "8px" }}>
+            Use Arrow Keys or Mobile controls below to steer.
+          </div>
+        </div>
+      ) : gameOver ? (
+        <div style={{ textAlign: "center", padding: "20px 0", color: "var(--t-red)" }}>
+          <div>GAME OVER</div>
+          <button
+            className="cmd-link"
+            onClick={resetGame}
+            style={{ fontSize: "14px", background: "none", border: "none", marginTop: "10px" }}
+          >
+            [ PLAY AGAIN ]
+          </button>
+        </div>
+      ) : (
+        <pre style={{
+          lineHeight: "1.2",
+          letterSpacing: "4px",
+          textAlign: "center",
+          margin: "10px 0",
+          color: "var(--t-text)"
+        }}>
+          {renderGrid()}
+        </pre>
+      )}
+
+      {/* Mobile controls */}
+      {isPlaying && !gameOver && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", marginTop: "12px" }}>
+          <button
+            style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+            onClick={() => dir !== "D" && setDir("U")}
+          >
+            ▲
+          </button>
+          <div style={{ display: "flex", gap: "16px" }}>
+            <button
+              style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+              onClick={() => dir !== "R" && setDir("L")}
+            >
+              ◀
+            </button>
+            <button
+              style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+              onClick={() => dir !== "L" && setDir("R")}
+            >
+              ▶
+            </button>
+          </div>
+          <button
+            style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+            onClick={() => dir !== "U" && setDir("D")}
+          >
+            ▼
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -26,6 +26,7 @@ import {
   ProjectsOutput,
   ProjectDetailOutput,
   ShowcaseOutput,
+  SnakeGame,
 } from "./ComplexOutputs";
 
 export interface CommandResult {
@@ -120,6 +121,8 @@ export function executeCommand(
       return { output: <ProjectDetailOutput onExecuteCmd={onExecuteCmd} args={args} /> };
     case "showcase":
       return { output: <ShowcaseOutput onExecuteCmd={onExecuteCmd} /> };
+    case "snake":
+      return { output: <SnakeGame /> };
 
     // Action commands
     case "clear":
