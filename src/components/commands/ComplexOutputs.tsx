@@ -669,10 +669,10 @@ export const SnakeGame = () => {
 
   // Focus utility to capture keyboard arrow keys
   useEffect(() => {
-    if (isPlaying && gameRef.current) {
+    if (isPlaying && !gameOver && gameRef.current) {
       gameRef.current.focus();
     }
-  }, [isPlaying]);
+  }, [isPlaying, gameOver]);
 
   // Handle arrow key presses
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -747,6 +747,9 @@ export const SnakeGame = () => {
     setGameOver(false);
     setScore(0);
     setIsPlaying(true);
+    setTimeout(() => {
+      gameRef.current?.focus();
+    }, 10);
   };
 
   // Render Grid
@@ -768,6 +771,23 @@ export const SnakeGame = () => {
       lines.push(line);
     }
     return lines.join("\n");
+  };
+
+  const btnStyle: React.CSSProperties = {
+    background: "var(--t-surface)",
+    border: "1px solid var(--t-dim)",
+    color: "var(--t-text)",
+    width: "44px",
+    height: "44px",
+    display: "flex",
+    alignItems: "center",
+    justify: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+    borderRadius: "4px",
+    cursor: "pointer",
+    touchAction: "manipulation",
+    userSelect: "none"
   };
 
   return (
@@ -827,29 +847,29 @@ export const SnakeGame = () => {
 
       {/* Mobile controls */}
       {isPlaying && !gameOver && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", marginTop: "12px" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", marginTop: "12px" }}>
           <button
-            style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+            style={btnStyle}
             onClick={() => dir !== "D" && setDir("U")}
           >
             ▲
           </button>
           <div style={{ display: "flex", gap: "16px" }}>
             <button
-              style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+              style={btnStyle}
               onClick={() => dir !== "R" && setDir("L")}
             >
               ◀
             </button>
             <button
-              style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+              style={btnStyle}
               onClick={() => dir !== "L" && setDir("R")}
             >
               ▶
             </button>
           </div>
           <button
-            style={{ background: "var(--t-surface)", border: "1px solid var(--t-dim)", color: "var(--t-text)", padding: "4px 12px" }}
+            style={btnStyle}
             onClick={() => dir !== "U" && setDir("D")}
           >
             ▼
