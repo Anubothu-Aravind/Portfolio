@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { personal, education, experience, projects, capabilities, certifications } from "@/data/portfolio";
-import { ProfileImage } from "./Outputs";
+import { ProfileImage, getStaggerStyle } from "./Outputs";
 
 interface OutputProps {
   onExecuteCmd: (cmd: string) => void;
@@ -93,16 +93,23 @@ export const CertsOutput = ({ onExecuteCmd }: OutputProps) => {
     <div className="output-block">
       <div style={{ color: "var(--t-dim)", marginBottom: "8px" }}>$ cat certificates.log</div>
       <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-        {certifications.map((cert) => {
+        {certifications.map((cert, certIdx) => {
           const date = cert.date || "2024-01";
           const label = cert.title;
           const certId = getCertId(label);
           return (
             <div
               key={cert.title}
-              className="term-row"
+              className="term-row staggered-row"
               onClick={() => onExecuteCmd(`cert ${certId}`)}
-              style={{ display: "flex", justifyContent: "flex-start", width: "100%", maxWidth: "720px", flexWrap: "nowrap" }}
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                width: "100%",
+                maxWidth: "720px",
+                flexWrap: "nowrap",
+                ...getStaggerStyle(certIdx)
+              }}
             >
               <span style={{ color: "var(--t-dim)", marginRight: "8px" }}>[{date}]</span>
               <span className="cmd-link" style={{ color: "var(--t-text-mid)", marginRight: "4px" }}>{label}</span>
@@ -279,7 +286,11 @@ export const ExperienceOutput = () => {
       <div style={{ color: "var(--t-dim)", marginBottom: "8px" }}>$ git log --oneline --graph</div>
       <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "800px" }}>
         {experience.map((exp, index) => (
-          <div key={exp.id} style={{ display: "flex", gap: "10px" }}>
+          <div
+            key={exp.id}
+            className="staggered-row"
+            style={{ display: "flex", gap: "10px", ...getStaggerStyle(index) }}
+          >
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <span style={{ color: "var(--t-accent)", fontWeight: "bold" }}>*</span>
               {index < experience.length - 1 && (
@@ -378,7 +389,11 @@ export const SkillsOutput = () => {
         {tree.map((cat, catIdx) => {
           const isLastCat = catIdx === tree.length - 1;
           return (
-            <div key={cat.label} style={{ marginTop: "4px" }}>
+            <div
+              key={cat.label}
+              className="staggered-row"
+              style={{ marginTop: "4px", ...getStaggerStyle(catIdx) }}
+            >
               <div style={{ whiteSpace: "pre" }}>
                 <span style={{ color: "var(--t-dimmer)" }}>{isLastCat ? "└── " : "├── "}</span>
                 <span style={{ color: "var(--t-accent)", fontWeight: "bold" }}>{cat.label}</span>
@@ -425,10 +440,11 @@ export const ProjectsOutput = ({ onExecuteCmd }: OutputProps) => {
             </tr>
           </thead>
           <tbody>
-            {tableProjects.map((p) => (
+            {tableProjects.map((p, pIdx) => (
               <tr
                 key={p.pid}
-                className="term-row"
+                className="term-row staggered-row"
+                style={getStaggerStyle(pIdx)}
                 onClick={() => onExecuteCmd(`project ${p.id}`)}
               >
                 <td style={{ padding: "6px 8px", color: "var(--t-dim)" }}>{p.pid}</td>

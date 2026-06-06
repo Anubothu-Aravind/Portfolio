@@ -33,6 +33,7 @@ export interface CommandResult {
   action?: "clear" | "theme" | "resume" | "repo" | "open_url";
   themeName?: "amber" | "green" | "matrix";
   url?: string;
+  isValid?: boolean;
 }
 
 export function executeCommand(
@@ -129,16 +130,37 @@ export function executeCommand(
       if (themeVal === "amber" || themeVal === "green" || themeVal === "matrix") {
         return {
           output: <div style={{ color: "var(--t-green)" }}>Theme switched to {themeVal}.</div>,
-          action: "theme",
-          themeName: themeVal,
+      const availableThemes = ["amber", "green", "matrix"];
+      const themeName = args.toLowerCase();
+      if (!themeName) {
+        return {
+          output: (
+            <div style={{ color: "var(--t-text)" }}>
+              Available themes: <span style={{ color: "var(--t-accent)" }}>amber</span>,{" "}
+              <span style={{ color: "var(--t-accent)" }}>green</span>,{" "}
+              <span style={{ color: "var(--t-accent)" }}>matrix</span>
+            </div>
+          ),
+        };
+      }
+      if (!availableThemes.includes(themeName)) {
+        return {
+          isValid: false,
+          output: (
+            <div style={{ color: "var(--t-red)" }}>
+              Theme "{themeName}" not found. Try one of: amber, green, matrix.
+            </div>
+          ),
         };
       }
       return {
         output: (
-          <div style={{ color: "var(--t-red)" }}>
-            Error: Invalid theme "{args}". Available themes: amber, green, matrix. E.g., `theme green`.
+          <div style={{ color: "var(--t-text)" }}>
+            Theme changed to <span style={{ color: "var(--t-accent)" }}>{themeName}</span>
           </div>
         ),
+        action: "theme",
+        themeName: themeName as "amber" | "green" | "matrix",
       };
     }
 
@@ -175,6 +197,7 @@ export function executeCommand(
     default: {
       const suggestion = findSuggestion(cmd);
       return {
+        isValid: false,
         output: (
           <div style={{ color: "var(--t-red)", marginTop: "4px" }}>
             Command not found: "{cmd}". Type <span className="cmd-link" onClick={() => onExecuteCmd("help")}>help</span> for commands.

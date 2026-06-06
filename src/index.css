@@ -479,3 +479,166 @@
   0%, 100% { color: var(--t-accent); opacity: 1; }
   50% { color: var(--t-text-mid); opacity: 0.75; }
 }
+
+/* ── Interactive Polish & Micro-Interactions ────────── */
+
+/* 1. Command Input Shake & Flash */
+.shake-input {
+  animation: shake-input-keyframes 0.4s ease-in-out;
+}
+
+@keyframes shake-input-keyframes {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.flash-success {
+  animation: flash-success-keyframes 0.4s ease-out;
+}
+
+@keyframes flash-success-keyframes {
+  0% {
+    box-shadow: 0 0 0 0px rgba(74, 222, 128, 0);
+    border-color: var(--t-border);
+  }
+  30% {
+    box-shadow: 0 0 8px 1px var(--t-accent);
+    border-color: var(--t-accent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+    border-color: var(--t-border);
+  }
+}
+
+/* 2. Menu Command Links in Help & Listings */
+.help-cmd-link {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  color: var(--t-accent);
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: transform 0.15s ease-out, border-color 0.15s, background 0.1s, color 0.1s;
+}
+
+.help-cmd-link:hover {
+  transform: translateX(4px);
+  border-bottom-color: var(--t-accent);
+}
+
+.help-cmd-link::before {
+  content: "▶";
+  position: absolute;
+  left: -12px;
+  opacity: 0;
+  font-size: 8px;
+  transition: opacity 0.15s ease-out;
+  color: var(--t-accent);
+}
+
+.help-cmd-link:hover::before {
+  opacity: 1;
+}
+
+.help-cmd-link:active {
+  background: var(--t-accent) !important;
+  color: var(--t-bg) !important;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* 3. Theme Sweep Transition */
+.terminal-window {
+  position: relative;
+  transform-origin: center;
+  animation: terminal-scale-in 0.3s ease-out forwards;
+}
+
+@keyframes terminal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.theme-sweep-active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(to bottom, transparent, var(--t-accent), transparent);
+  box-shadow: 0 0 10px var(--t-accent), 0 0 20px var(--t-accent);
+  opacity: 0.7;
+  z-index: 1000;
+  pointer-events: none;
+  animation: theme-sweep-keyframes 0.3s linear forwards;
+}
+
+@keyframes theme-sweep-keyframes {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* FAB Switch Animation */
+.mobile-fab.pulse-fab {
+  animation: fab-spin-pulse 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes fab-spin-pulse {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+/* 4. Output Staggered Entry Animation */
+.staggered-row {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: print-line-keyframes 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes print-line-keyframes {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 5. CRT Faint Opacity Pulse */
+.crt-overlay {
+  animation: crt-pulse-keyframes 8s ease-in-out infinite;
+}
+
+@keyframes crt-pulse-keyframes {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+/* 6. Certificate modal animation class */
+.cert-preview-container {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  transform: scale(0.92);
+  opacity: 0;
+}
+
+.cert-preview-container.open {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 7. Low Bandwidth Overrides */
+.low-bandwidth *, 
+.low-bandwidth::after, 
+.low-bandwidth::before {
+  animation: none !important;
+  transition: none !important;
+}

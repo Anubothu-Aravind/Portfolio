@@ -13,10 +13,17 @@ export function Terminal() {
     autocompleteHint,
     handleKeyDown,
     execute,
+    inputAnimation,
+    setInputAnimation,
+    isProcessing,
   } = useTerminal();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [placeholder, setPlaceholder] = useState("");
+  const [sweepActive, setSweepActive] = useState(false);
+  const [fabPulse, setFabPulse] = useState(false);
+  const [lowBandwidthMode, setLowBandwidthMode] = useState(false);
+  const isFirstRender = useRef(true);
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -38,25 +45,25 @@ export function Terminal() {
     const typeIntervalId = setInterval(() => {
       if (i < targetText.length) {
         currentText += targetText[i];
-        setPlaceholder(currentText);
+        setPlaceholder(currentText + "█");
         i++;
       } else {
         clearInterval(typeIntervalId);
         sessionStorage.setItem("hasVisitedTerminal", "true");
         
-        // Blink cursor at the end for 3 seconds, then set standard placeholder
-        let blink = true;
+        let showCursor = true;
         blinkIntervalId = setInterval(() => {
-          setPlaceholder(targetText + (blink ? " █" : ""));
-          blink = !blink;
+          showCursor = !showCursor;
+          setPlaceholder(targetText + (showCursor ? "█" : " "));
         }, 500);
 
+        // Fade placeholder out and replace after 3 seconds
         setTimeout(() => {
           if (blinkIntervalId) clearInterval(blinkIntervalId);
           setPlaceholder(finalPlaceholder);
         }, 3000);
       }
-    }, 70);
+    }, 80);
 
     return () => {
       clearInterval(typeIntervalId);
@@ -64,14 +71,13 @@ export function Terminal() {
     };
   }, []);
 
-  // Auto scroll to bottom when history or autocomplete prediction updates
+  // Scroll to bottom on history change
   useEffect(() => {
     if (bodyRef.current) {
       bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
     }
   }, [history]);
 
-  // Focus terminal input when clicking anywhere inside the terminal body
   const handleBodyClick = () => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -85,17 +91,48 @@ export function Terminal() {
     }
   }, []);
 
+  // Network connection speed check (bandwidth-aware rendering)
+  useEffect(() => {
+    // Safari / iOS fallback: navigator.connection is not supported.
+    // If connection is undefined, we assume a normal connection (lowBandwidthMode = false).
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (conn) {
+      const isSlow = conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType);
+      if (isSlow) {
+        setLowBandwidthMode(true);
+      }
+    }
+  }, []);
+
+  // Theme change scanline sweep + FAB spin triggers
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    setSweepActive(true);
+    setFabPulse(true);
+
+    const sweepTimer = setTimeout(() => setSweepActive(false), 300);
+    const fabTimer = setTimeout(() => setFabPulse(false), 400);
+
+    return () => {
+      clearTimeout(sweepTimer);
+      clearTimeout(fabTimer);
+    };
+  }, [theme]);
+
   const handleMobileMenuClick = (cmd: string) => {
     setMobileMenuOpen(false);
     execute(cmd);
   };
 
   return (
-    <TerminalWindow theme={theme}>
-      {/* Terminal scroll body */}
-      <div className="terminal-body" ref={bodyRef} onClick={handleBodyClick}>
+    <TerminalWindow theme={theme} className={`${sweepActive ? "theme-sweep-active" : ""} ${lowBandwidthMode ? "low-bandwidth" : ""}`}>
+      <div className="terminal-body" ref={bodyRef}>
         
-        {/* Responsive Banner */}
+        {/* Banner */}
         <div className="hidden md:block">
           <pre style={{ color: "var(--t-accent)", lineHeight: "1.2", overflowX: "auto", margin: 0 }}>
             {ASCII_BANNER}
@@ -106,6 +143,12 @@ export function Terminal() {
             {ASCII_BANNER_SMALL}
           </pre>
         </div>
+
+        {lowBandwidthMode && (
+          <div style={{ color: "var(--t-red)", marginBottom: "1rem", fontSize: "13px", fontFamily: "inherit" }}>
+            [ SYSTEM ] Low bandwidth mode active. Decorative scanlines, sweeps, and animations disabled.
+          </div>
+        )}
 
         {/* Startup Dash */}
         <WelcomeDashboard onExecuteCmd={execute} />
@@ -118,7 +161,11 @@ export function Terminal() {
               <span className="cmd-text">{entry.cmd}</span>
             </div>
             <div style={{ marginTop: "4px" }}>
-              {entry.output}
+              {entry.output === null ? (
+                <LoadingSpinner />
+              ) : (
+                entry.output
+              )}
             </div>
           </div>
         ))}
@@ -130,6 +177,7 @@ export function Terminal() {
           <button
             key={cmd}
             className="mobile-pill-btn"
+            disabled={isProcessing}
             onClick={() => execute(cmd)}
           >
             {cmd}
@@ -138,7 +186,11 @@ export function Terminal() {
       </div>
 
       {/* Terminal prompt input bar */}
-      <div className="terminal-input-area" onClick={handleBodyClick}>
+      <div
+        className={`terminal-input-area ${inputAnimation === "shake" ? "shake-input" : ""} ${inputAnimation === "flash" ? "flash-success" : ""}`}
+        onAnimationEnd={() => setInputAnimation("")}
+        onClick={handleBodyClick}
+      >
         <span className="terminal-prompt">guest@aravind-portfolio:~$</span>
         <div style={{ position: "relative", flex: 1, display: "flex", alignItems: "center", minWidth: 0 }}>
           
@@ -152,8 +204,9 @@ export function Terminal() {
           <input
             ref={inputRef}
             type="text"
-            className="terminal-input"
+            className={`terminal-input ${isProcessing ? "processing" : ""}`}
             value={input}
+            disabled={isProcessing}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             autoComplete="off"
@@ -166,7 +219,7 @@ export function Terminal() {
       </div>
 
       {/* Mobile Floating Command Menu FAB */}
-      <button className="mobile-fab" onClick={() => setMobileMenuOpen(true)}>
+      <button className={`mobile-fab ${fabPulse ? "pulse-fab" : ""}`} onClick={() => setMobileMenuOpen(true)}>
         &gt;_
       </button>
 
@@ -217,5 +270,24 @@ export function Terminal() {
         </div>
       )}
     </TerminalWindow>
+  );
+}
+
+function LoadingSpinner() {
+  const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  const [frameIdx, setFrameIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFrameIdx((prev) => (prev + 1) % frames.length);
+    }, 80);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--t-accent)" }}>
+      <span style={{ display: "inline-block", width: "16px", textAlign: "center" }}>{frames[frameIdx]}</span>
+      <span style={{ color: "var(--t-text-mid)", fontStyle: "italic", fontSize: "13px" }}>processing...</span>
+    </div>
   );
 }

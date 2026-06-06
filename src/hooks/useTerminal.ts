@@ -16,6 +16,8 @@ export function useTerminal() {
   const [cmdIndex, setCmdIndex] = useState(-1);
   const [theme, setTheme] = useState<"amber" | "green" | "matrix">("amber");
   const [autocompleteHint, setAutocompleteHint] = useState("");
+  const [inputAnimation, setInputAnimation] = useState<"shake" | "flash" | "">("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Update theme in DOM attribute
   useEffect(() => {
@@ -43,46 +45,74 @@ export function useTerminal() {
   const execute = (cmdStr: string) => {
     const trimmed = cmdStr.trim();
     if (!trimmed) return;
+    if (isProcessing) return;
 
-    // Run command registry handler
-    const result = executeCommand(trimmed, execute, cmdHistory);
+    setIsProcessing(true);
 
-    // Record entered command in history stack
-    setCmdHistory((prev) => [...prev, trimmed]);
-    setCmdIndex(-1);
-
-    // Dispatch side-effects if needed
-    if (result.action) {
-      if (result.action === "clear") {
-        setHistory([]);
-        setInput("");
-        return;
-      }
-      if (result.action === "theme" && result.themeName) {
-        setTheme(result.themeName);
-      }
-      if (result.action === "repo") {
-        window.open(personal.github, "_blank");
-      }
-      if (result.action === "open_url" && result.url) {
-        window.open(result.url, "_blank");
-      }
-    }
-
-    // Append to terminal history log
+    // Create a unique loading ID for the spinner entry
+    const tempId = Math.random().toString(36).substr(2, 9);
+    
+    // Staging the temp history entry
     setHistory((prev) => [
       ...prev,
       {
-        id: Math.random().toString(36).substr(2, 9),
+        id: tempId,
         cmd: trimmed,
-        output: result.output,
+        output: null,
       },
     ]);
 
+    // Clear input immediately so user sees responsiveness
     setInput("");
+
+    // Simulated short terminal processing delay
+    setTimeout(() => {
+      const result = executeCommand(trimmed, execute, cmdHistory);
+      const isValid = result.isValid !== false;
+      setInputAnimation(isValid ? "flash" : "shake");
+
+      // Record entered command in history stack
+      setCmdHistory((prev) => [...prev, trimmed]);
+      setCmdIndex(-1);
+
+      if (result.action) {
+        if (result.action === "clear") {
+          setHistory([]);
+          setIsProcessing(false);
+          return;
+        }
+        if (result.action === "theme" && result.themeName) {
+          setTheme(result.themeName);
+        }
+        if (result.action === "repo") {
+          window.open(personal.github, "_blank");
+        }
+        if (result.action === "open_url" && result.url) {
+          window.open(result.url, "_blank");
+        }
+      }
+
+      setHistory((prev) =>
+        prev.map((entry) =>
+          entry.id === tempId
+            ? {
+                ...entry,
+                output: result.output,
+              }
+            : entry
+        )
+      );
+
+      setIsProcessing(false);
+    }, 350);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (isProcessing) {
+      e.preventDefault();
+      return;
+    }
+
     // 1. Enter key
     if (e.key === "Enter") {
       e.preventDefault();
@@ -134,5 +164,8 @@ export function useTerminal() {
     autocompleteHint,
     handleKeyDown,
     execute,
+    inputAnimation,
+    setInputAnimation,
+    isProcessing,
   };
 }

@@ -41,6 +41,13 @@ export const ProfileImage = ({ size = 140 }: ProfileImageProps) => {
   );
 };
 
+export function getStaggerStyle(index: number, stepMs = 30, maxStaggerCount = 10): React.CSSProperties {
+  const actualIndex = Math.min(index, maxStaggerCount);
+  return {
+    animationDelay: `${actualIndex * stepMs}ms`,
+  };
+}
+
 interface OutputProps {
   onExecuteCmd: (cmd: string) => void;
   args?: string;
@@ -140,12 +147,12 @@ export const HelpOutput = ({ onExecuteCmd }: OutputProps) => {
           </div>
           <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: "600px" }}>
             <tbody>
-              {cat.cmds.map((cmd) => {
+              {cat.cmds.map((cmd, cmdIdx) => {
                 const clickableCmd = cmd.name.split(" ")[0];
                 return (
-                  <tr key={cmd.name}>
+                  <tr key={cmd.name} className="staggered-row" style={getStaggerStyle(cmdIdx)}>
                     <td style={{ padding: "3px 0", width: "160px", verticalAlign: "top" }}>
-                      <span className="cmd-link" onClick={() => onExecuteCmd(clickableCmd)}>
+                      <span className="help-cmd-link" onClick={() => onExecuteCmd(clickableCmd)}>
                         {cmd.name}
                       </span>
                     </td>

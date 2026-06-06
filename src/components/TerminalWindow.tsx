@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
-export function TerminalWindow({ children, theme = "amber" }: { children: ReactNode; theme?: string }) {
+export function TerminalWindow({ children, theme = "amber", className = "" }: { children: ReactNode; theme?: string; className?: string }) {
   return (
-    <div className="terminal-window" data-theme={theme}>
+    <div className={`terminal-window ${className}`} data-theme={theme}>
       {/* CRT scanline overlay */}
       <div className="crt-overlay" />
 
