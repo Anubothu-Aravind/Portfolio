@@ -122,6 +122,21 @@ export const CertsOutput = ({ onExecuteCmd }: OutputProps) => {
 };
 
 export const CertDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const keyword = (args || "").trim().toLowerCase();
+  const cert = certifications.find(c => {
+    const title = c.title.toLowerCase();
+    return title.includes(keyword) || c.issuer.toLowerCase().includes(keyword) || c.type.toLowerCase().includes(keyword);
+  });
+  const [previewSrc, setPreviewSrc] = useState(cert ? cert.localUrl : "");
+
+  React.useEffect(() => {
+    if (cert) {
+      setPreviewSrc(cert.localUrl);
+      setShowPreview(false);
+    }
+  }, [cert]);
+
   if (!args) {
     return (
       <div className="output-block" style={{ color: "var(--t-red)" }}>
@@ -129,12 +144,6 @@ export const CertDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
       </div>
     );
   }
-
-  const keyword = args.trim().toLowerCase();
-  const cert = certifications.find(c => {
-    const title = c.title.toLowerCase();
-    return title.includes(keyword) || c.issuer.toLowerCase().includes(keyword) || c.type.toLowerCase().includes(keyword);
-  });
 
   if (!cert) {
     return (
@@ -197,6 +206,46 @@ export const CertDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
           <span style={{ color: "var(--t-dimmer)" }}>
             (or type: <span style={{ color: "var(--t-text)" }}>open cert {certId}</span>)
           </span>
+        </div>
+
+        {/* Inline Certificate Preview Toggle */}
+        <div style={{ marginTop: "12px", borderTop: "1px dashed var(--t-border)", paddingTop: "12px" }}>
+          {showPreview ? (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                <span style={{ color: "var(--t-accent)", fontWeight: "bold" }}>PREVIEW:</span>
+                <span className="cmd-link" onClick={() => setShowPreview(false)}>
+                  [Hide Preview]
+                </span>
+              </div>
+              <div style={{
+                border: "1px solid var(--t-border)",
+                padding: "6px",
+                background: "var(--t-surface)",
+                maxWidth: "100%",
+                width: "480px"
+              }}>
+                <img
+                  src={previewSrc}
+                  alt={cert.title}
+                  onError={() => {
+                    if (previewSrc !== cert.fallbackUrl) {
+                      setPreviewSrc(cert.fallbackUrl);
+                    }
+                  }}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    display: "block"
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <span className="cmd-link" onClick={() => setShowPreview(true)}>
+              [Show Certificate Preview]
+            </span>
+          )}
         </div>
       </div>
     </div>
