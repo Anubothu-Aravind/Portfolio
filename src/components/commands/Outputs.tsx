@@ -76,8 +76,9 @@ export const WelcomeDashboard = ({ onExecuteCmd }: OutputProps) => {
           </div>
         ))}
       </div>
-      <div style={{ color: "var(--t-dim)", fontSize: "12px" }}>
-        Type <span className="cmd-link" onClick={() => onExecuteCmd("help")}>help</span> to see all available commands.
+      <div className="pulse-accent" style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "6px", marginTop: "12px" }}>
+        <span>▸</span>
+        <span>Type <span className="cmd-link" style={{ fontWeight: "bold", textDecoration: "underline" }} onClick={() => onExecuteCmd("help")}>help</span> to explore all commands.</span>
       </div>
     </div>
   );

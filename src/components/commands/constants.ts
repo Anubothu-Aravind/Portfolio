@@ -1,16 +1,19 @@
-export const ASCII_BANNER = `
- █████╗ ██████╗  █████╗ ██╗   ██╗██╗███╗   ██╗██████╗ 
-██╔══██╗██╔══██╗██╔══██╗██║   ██║██║████╗  ██║██╔══██╗
-███████║██████╔╝███████║██║   ██║██║██╔██╗ ██║██║  ██║
-██╔══██║██╔══██╗██╔══██║╚██╗ ██╔╝██║██║╚██╗██║██║  ██║
-██║  ██║██║  ██║██║  ██║ ╚████╔╝ ██║██║ ╚████║██████╔╝
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═══╝╚═════╝`;
+export const ASCII_BANNER = `┌──────────────────────────────────────────────┐
+│     _    ____     _    _   _ ___ _   _ ____  │
+│    / \\  |  _ \\   / \\  | | | |_ _| \\ | |  _ \\ │
+│   / _ \\ | |_) | / _ \\ | | | || ||  \\| | | | |│
+│  / ___ \\|  _ < / ___ \\| |/ / | || |\\  | |_| |│
+│ /_/   \\_\\_| \\_/_/   \\_\\___/|___|_| \\_|____/  │
+│                                              │
+│  Backend Engineer · AI Systems · Cloud Infra │
+│  github.com/Anubothu-Aravind                 │
+└──────────────────────────────────────────────┘`;
 
-export const ASCII_BANNER_SMALL = `
-┌─────────────────────────────┐
-│   ARAVIND ANUBOTHU          │
-│   Backend & AI Engineer     │
-└─────────────────────────────┘`;
+export const ASCII_BANNER_SMALL = `┌────────────────────────────────┐
+│  ARAVIND ANUBOTHU              │
+│  Backend & AI Engineer         │
+│  github.com/Anubothu-Aravind   │
+└────────────────────────────────┘`;
 
 export const COMMAND_LIST = [
   "help", "whoami", "about", "me", "projects", "work", "project", "skills",
@@ -37,9 +40,9 @@ export function levenshtein(a: string, b: string): number {
   );
   for (let i = 1; i <= m; i++)
     for (let j = 1; j <= n; j++)
-      dp[i][j] = a[i-1] === b[j-1]
-        ? dp[i-1][j-1]
-        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
   return dp[m][n];
 }
 

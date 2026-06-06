@@ -16,8 +16,53 @@ export function Terminal() {
   } = useTerminal();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [placeholder, setPlaceholder] = useState("");
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Typewriter effect for placeholder on first visit
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("hasVisitedTerminal");
+    const targetText = 'Type "help" to start...';
+    const finalPlaceholder = 'Type command (e.g. "help", "projects")';
+
+    if (hasVisited) {
+      setPlaceholder(finalPlaceholder);
+      return;
+    }
+
+    let currentText = "";
+    let i = 0;
+    let blinkIntervalId: ReturnType<typeof setInterval> | null = null;
+
+    const typeIntervalId = setInterval(() => {
+      if (i < targetText.length) {
+        currentText += targetText[i];
+        setPlaceholder(currentText);
+        i++;
+      } else {
+        clearInterval(typeIntervalId);
+        sessionStorage.setItem("hasVisitedTerminal", "true");
+        
+        // Blink cursor at the end for 3 seconds, then set standard placeholder
+        let blink = true;
+        blinkIntervalId = setInterval(() => {
+          setPlaceholder(targetText + (blink ? " █" : ""));
+          blink = !blink;
+        }, 500);
+
+        setTimeout(() => {
+          if (blinkIntervalId) clearInterval(blinkIntervalId);
+          setPlaceholder(finalPlaceholder);
+        }, 3000);
+      }
+    }, 70);
+
+    return () => {
+      clearInterval(typeIntervalId);
+      if (blinkIntervalId) clearInterval(blinkIntervalId);
+    };
+  }, []);
 
   // Auto scroll to bottom when history or autocomplete prediction updates
   useEffect(() => {
@@ -79,10 +124,23 @@ export function Terminal() {
         ))}
       </div>
 
+      {/* Mobile Command Quick Pills */}
+      <div className="mobile-command-pills">
+        {["help", "whoami", "projects", "skills", "experience", "certs", "contact", "resume"].map((cmd) => (
+          <button
+            key={cmd}
+            className="mobile-pill-btn"
+            onClick={() => execute(cmd)}
+          >
+            {cmd}
+          </button>
+        ))}
+      </div>
+
       {/* Terminal prompt input bar */}
       <div className="terminal-input-area" onClick={handleBodyClick}>
         <span className="terminal-prompt">guest@aravind-portfolio:~$</span>
-        <div style={{ position: "relative", flex: 1, display: "flex", alignItems: "center" }}>
+        <div style={{ position: "relative", flex: 1, display: "flex", alignItems: "center", minWidth: 0 }}>
           
           {/* Autocomplete Predictive Inline Shadow Text */}
           {autocompleteHint && (
@@ -102,14 +160,14 @@ export function Terminal() {
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
-            placeholder='Type command (e.g. "help", "projects")'
+            placeholder={placeholder}
           />
         </div>
       </div>
 
       {/* Mobile Floating Command Menu FAB */}
       <button className="mobile-fab" onClick={() => setMobileMenuOpen(true)}>
-        Menu ▼
+        &gt;_
       </button>
 
       {/* Mobile Command Drawer overlay */}
