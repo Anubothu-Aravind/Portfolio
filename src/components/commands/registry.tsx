@@ -126,12 +126,8 @@ export function executeCommand(
       return { output: null, action: "clear" };
 
     case "theme": {
-      const themeVal = args.trim().toLowerCase();
-      if (themeVal === "amber" || themeVal === "green" || themeVal === "matrix") {
-        return {
-          output: <div style={{ color: "var(--t-green)" }}>Theme switched to {themeVal}.</div>,
       const availableThemes = ["amber", "green", "matrix"];
-      const themeName = args.toLowerCase();
+      const themeName = args.trim().toLowerCase();
       if (!themeName) {
         return {
           output: (
