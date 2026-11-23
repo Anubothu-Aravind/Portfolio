@@ -54,12 +54,17 @@ const href = (hash: string) => (onHome ? hash : `/${hash}`);
     border: 1px solid var(--line);
     box-shadow: var(--shadow-lift);
     transform: translate(-50%, 0);
-    transition: transform var(--dur-3) var(--ease-spring), opacity var(--dur-2) linear;
+    visibility: visible;
+    transition: transform var(--dur-3) var(--ease-spring), opacity var(--dur-2) linear, visibility 0s linear 0s;
   }
 
-  :global(.js) .dock:not(.is-shown):not([data-always]) {
+  /* hidden = out of view AND out of the tab order (visibility flips after the slide-out).
+     Keyboard users (.is-kbd) always get it, so Tab reaches the main nav from the top of the page. */
+  :global(.js) .dock:not(.is-shown):not(.is-kbd):not([data-always]) {
     transform: translate(-50%, 140%);
     opacity: 0;
+    visibility: hidden;
+    transition: transform var(--dur-3) var(--ease-spring), opacity var(--dur-2) linear, visibility 0s linear var(--dur-3);
   }
 
   .dock a,
@@ -179,8 +184,12 @@ const href = (hash: string) => (onHome ? hash : `/${hash}`);
   const scheme = () => {
     const d = document.documentElement;
     const explicit = d.dataset.theme;
-    const dark = explicit ? explicit === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // light unless the visitor has switched to dark (the system setting no longer decides)
+    const dark = explicit === "dark";
     d.dataset.scheme = dark ? "dark" : "light";
+    // keep the mobile browser bar the same colour as the page
+    const paper = getComputedStyle(d).getPropertyValue("--paper").trim();
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", paper);
     return dark;
   };
 
@@ -204,6 +213,10 @@ const href = (hash: string) => (onHome ? hash : `/${hash}`);
         scheme();
       });
       const onScroll = () => dock.classList.toggle("is-shown", window.scrollY > window.innerHeight * 0.35);
+      window.addEventListener("keydown", (ev) => {
+        if (ev.key === "Tab") dock.classList.add("is-kbd");
+      });
+      window.addEventListener("pointerdown", () => dock.classList.remove("is-kbd"), { passive: true });
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
     }

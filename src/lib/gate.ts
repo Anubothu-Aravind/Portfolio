@@ -1,4 +1,4 @@
-import { animate, stagger, EASE, T, reducedMotion, getLenis, glideTo, jumpTo } from "./motion";
+import { animate, stagger, EASE, reducedMotion, getLenis, jumpTo } from "./motion";
 
 /*
  * Scroll "gate", modelled on the reference site's behaviour:
@@ -7,8 +7,8 @@ import { animate, stagger, EASE, T, reducedMotion, getLenis, glideTo, jumpTo } f
  *  - At the hero, scrolling down plays a choreographed hand-off: the chat and story leave,
  *    the paper sheet grows to fill the screen, and the page lands on the work section.
  *    Scrolling up from the top of work plays it backwards.
- *  - At the end of the work section, one tick glides the page to the timeline (0.9s), and back.
- *  - Everywhere else, scrolling is untouched.
+ *  - Everywhere else, scrolling is untouched. (The timeline below pins and steps through its
+ *    chapters with plain scrolling, so it needs no glide of its own, in either direction.)
  */
 
 type Ease = [number, number, number, number];
@@ -23,7 +23,6 @@ const IN = { shrink: 0.8, copyInAt: 0.3, copyIn: 0.85, copyStagger: 0.04 };
 export const initGate = () => {
   const hero = document.querySelector<HTMLElement>("[data-hero]");
   const work = document.querySelector<HTMLElement>("#work");
-  const story = document.querySelector<HTMLElement>("#story");
   const veil = document.querySelector<HTMLElement>("[data-gate-veil]");
   if (!hero || !work || !veil || hero.dataset.gate) return;
   hero.dataset.gate = "1";
@@ -54,56 +53,69 @@ export const initGate = () => {
     heroHidden = false;
   };
 
-  /* hero -> work */
-  const down = async () => {
-    busy = true;
-    getLenis()?.stop();
-    const clip = sheetClip();
-    animate(chatParts().reverse(), { opacity: 0, y: -28 }, { duration: OUT.duration, ease: e("leave"), delay: stagger(OUT.stagger) });
-    animate(copyParts(), { opacity: 0, y: -36 }, { duration: OUT.copyOut, ease: e("leave"), delay: stagger(OUT.copyStagger, { startDelay: 0.06 }) });
-    heroHidden = true;
-
-    veil.style.clipPath = clip;
-    veil.style.visibility = "visible";
-    veil.style.opacity = "1";
-    await animate(
-      veil,
-      { clipPath: [clip, FULL], backgroundColor: [token("--card"), token("--paper")] },
-      { duration: OUT.grow, ease: e("travel"), delay: OUT.growAt }
-    );
-    jumpTo(top(work));
-    showHero();
-    await animate(veil, { opacity: [1, 0] }, { duration: OUT.fadeOut, ease: e("settle") });
+  // Always hand scrolling back, even if a transition is cut short (navigation, a thrown error)
+  const release = () => {
     veil.style.visibility = "hidden";
     getLenis()?.start();
     busy = false;
   };
 
-  /* work -> hero */
+  // Where the hero's last screen begins: on short screens the hero is taller than the viewport
+  const heroEnd = () => Math.max(0, top(work) - window.innerHeight);
+
+  /* hero -> work */
+  const down = async () => {
+    busy = true;
+    getLenis()?.stop();
+    try {
+      const clip = sheetClip();
+      animate(chatParts().reverse(), { opacity: 0, y: -28 }, { duration: OUT.duration, ease: e("leave"), delay: stagger(OUT.stagger) });
+      animate(copyParts(), { opacity: 0, y: -36 }, { duration: OUT.copyOut, ease: e("leave"), delay: stagger(OUT.copyStagger, { startDelay: 0.06 }) });
+      heroHidden = true;
+
+      veil.style.clipPath = clip;
+      veil.style.visibility = "visible";
+      veil.style.opacity = "1";
+      await animate(
+        veil,
+        { clipPath: [clip, FULL], backgroundColor: [token("--card"), token("--paper")] },
+        { duration: OUT.grow, ease: e("travel"), delay: OUT.growAt }
+      );
+      jumpTo(top(work));
+      showHero();
+      await animate(veil, { opacity: [1, 0] }, { duration: OUT.fadeOut, ease: e("settle") });
+    } finally {
+      showHero();
+      release();
+    }
+  };
+
+  /* work -> hero (lands on the hero's last screen, so nothing above it is skipped on short screens) */
   const up = async () => {
     busy = true;
     getLenis()?.stop();
-    veil.style.clipPath = FULL;
-    veil.style.backgroundColor = token("--paper");
-    veil.style.opacity = "1";
-    veil.style.visibility = "visible";
-    const parts = [...copyParts(), ...chatParts()];
-    parts.forEach((el) => (el.style.opacity = "0"));
-    jumpTo(0);
-    await new Promise(requestAnimationFrame);
-    const clip = sheetClip();
-    animate(
-      copyParts(),
-      { opacity: [0, 1], y: [24, 0] },
-      { duration: IN.copyIn, ease: e("arrive"), delay: stagger(IN.copyStagger, { startDelay: IN.copyInAt + 0.2 }) }
-    );
-    animate(chatParts(), { opacity: [0, 1], y: [18, 0] }, { duration: 0.6, ease: e("arrive"), delay: stagger(0.03, { startDelay: IN.copyInAt + 0.3 }) });
-    await animate(veil, { clipPath: [FULL, clip], backgroundColor: [token("--paper"), token("--card")] }, { duration: IN.shrink, ease: e("travel") });
-    await animate(veil, { opacity: 0 }, { duration: 0.18 });
-    veil.style.visibility = "hidden";
-    heroHidden = false;
-    getLenis()?.start();
-    busy = false;
+    try {
+      veil.style.clipPath = FULL;
+      veil.style.backgroundColor = token("--paper");
+      veil.style.opacity = "1";
+      veil.style.visibility = "visible";
+      const parts = [...copyParts(), ...chatParts()];
+      parts.forEach((el) => (el.style.opacity = "0"));
+      jumpTo(heroEnd());
+      await new Promise(requestAnimationFrame);
+      const clip = sheetClip();
+      animate(
+        copyParts(),
+        { opacity: [0, 1], y: [24, 0] },
+        { duration: IN.copyIn, ease: e("arrive"), delay: stagger(IN.copyStagger, { startDelay: IN.copyInAt + 0.2 }) }
+      );
+      animate(chatParts(), { opacity: [0, 1], y: [18, 0] }, { duration: 0.6, ease: e("arrive"), delay: stagger(0.03, { startDelay: IN.copyInAt + 0.3 }) });
+      await animate(veil, { clipPath: [FULL, clip], backgroundColor: [token("--paper"), token("--card")] }, { duration: IN.shrink, ease: e("travel") });
+      await animate(veil, { opacity: 0 }, { duration: 0.18 });
+    } finally {
+      showHero();
+      release();
+    }
   };
 
   /* what should a gesture in this direction do from here? */
@@ -111,21 +123,12 @@ export const initGate = () => {
     if (!enabled()) return null;
     const y = window.scrollY;
     const w = top(work);
-    if (dir > 0 && y < w - 4) return down;
-    if (dir < 0 && y > 2 && y <= w + 4) return up;
-    if (story) {
-      const s = top(story);
-      const vh = window.innerHeight;
-      if (dir > 0 && y >= s - vh - 2 && y < s - 2) return () => glide(s);
-      if (dir < 0 && Math.abs(y - s) < 4) return () => glide(s - vh);
-    }
+    const end = heroEnd();
+    // down: only from the hero's last screen, so taller heroes scroll normally until their end
+    if (dir > 0 && y < w - 4) return y >= end - 2 ? down : null;
+    // up: only from the top of work, or when the hero is at most half on screen; higher up it's a normal scroll
+    if (dir < 0 && y > Math.max(end + 2, w - window.innerHeight / 2) && y <= w + 4) return up;
     return null;
-  };
-
-  const glide = async (y: number) => {
-    busy = true;
-    await glideTo(y);
-    busy = false;
   };
 
   /* wheel gestures */
@@ -189,6 +192,9 @@ export const initGate = () => {
   document.addEventListener(
     "astro:before-swap",
     () => {
+      // leaving mid-transition must never strand the next page with scrolling stopped
+      showHero();
+      release();
       window.removeEventListener("wheel", onWheel, { capture: true });
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("scroll", onScroll);

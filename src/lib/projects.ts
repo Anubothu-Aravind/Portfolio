@@ -4,11 +4,20 @@ export type ProjectGroup = "work" | "mtech" | "btech" | "side" | "campus";
 export type DemoKind = "route" | "sudoku" | "graph" | "tcp";
 
 export const GROUP_LABEL: Record<ProjectGroup, string> = {
-  work: "Client and internship",
-  mtech: "M.Tech",
-  btech: "B.Tech",
-  side: "Side projects",
-  campus: "Campus and clubs",
+  work: "client work",
+  mtech: "m.tech",
+  btech: "b.tech",
+  side: "side projects",
+  campus: "campus",
+};
+
+/* singular, for a single row's tag */
+export const GROUP_TAG: Record<ProjectGroup, string> = {
+  work: "client",
+  mtech: "m.tech",
+  btech: "b.tech",
+  side: "side project",
+  campus: "campus",
 };
 
 export const STATUS_LABEL: Record<ProjectStatus, string> = {

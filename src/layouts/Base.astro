@@ -26,8 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL("/assets/images/personal/aravind.jpg", Astro.site)} />
-    <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1c1917" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafaf9" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -91,7 +90,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         heroMotion();
         initGate();
         reveals();
-        tilt(".pcard, .algo, .pager__link, .job__card", 4);
+        tilt(".pcard, .algo, .pager__link", 4);
         wireCopy();
       });
       document.addEventListener("astro:after-swap", resetScroll);

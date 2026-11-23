@@ -55,8 +55,11 @@ const certs = [...certifications].sort((a, b) => b.date.localeCompare(a.date));
 const data = JSON.stringify(periods);
 ---
 
-<section id="story" class="section tl" aria-labelledby="story-title">
+<section id="story" class="section tl" aria-labelledby="story-title" data-tl>
   <div class="container">
+    <!-- Scrolling through the track steps the pinned board from the first chapter to the last -->
+    <div class="tl__track" data-tl-track>
+    <div class="tl__pin" data-tl-pin>
     <h2 id="story-title" class="tl__title" data-words>
       <span class="tl__accent">how i got here</span>, one chapter at a time.<span class="tl__hint"> point at a year.</span>
     </h2>
@@ -94,6 +97,9 @@ const data = JSON.stringify(periods);
         ))
       }
     </ol>
+
+    </div>
+    </div>
 
     <script type="application/json" data-tl-data set:html={data} />
     <script type="application/json" data-tl-end set:html={JSON.stringify(endLabel)} />
@@ -155,10 +161,26 @@ const data = JSON.stringify(periods);
     color: var(--signal-text);
   }
 
+  /* ---------- scroll mode: the board pins and the chapters advance with the scroll ---------- */
+  .tl.is-scrolly .tl__track {
+    height: calc(100svh + var(--steps) * 60svh);
+  }
+
+  .tl.is-scrolly .tl__pin {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
+    padding-block: 24px 88px;
+  }
+
   /* ---------- desktop board ---------- */
+  /* sized to the screen so the pinned board, its title and the dock clearance fit in one view */
   .tlb {
     position: relative;
-    height: 680px;
+    height: clamp(480px, calc(100svh - 220px), 680px);
     margin-top: 24px;
     user-select: none;
     -webkit-user-select: none;
@@ -404,6 +426,10 @@ const data = JSON.stringify(periods);
   }
 
   /* ---------- no-JS fallback ---------- */
+  .tlf[hidden] {
+    display: none;
+  }
+
   .tlf {
     list-style: none;
     margin: 24px 0 0;
@@ -412,9 +438,6 @@ const data = JSON.stringify(periods);
     gap: 28px;
   }
 
-  :global(.js) .tlf {
-    display: none;
-  }
 
   .tlf__when {
     font-family: var(--font-mono);
@@ -580,6 +603,8 @@ const data = JSON.stringify(periods);
   type Photo = { src: string; alt: string };
   type Period = { id: string; from: string; years: number; title: string; caption: string; photos: Photo[] };
   type Ease = [number, number, number, number];
+  /* what a built layout hands back: jump to a chapter, and the chapter the scroll says it should rest on */
+  type Chapters = { rest: (i: number) => void };
   const ease = (k: keyof typeof EASE) => EASE[k] as unknown as Ease;
   const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -593,7 +618,7 @@ const data = JSON.stringify(periods);
 
   /* ================= desktop board ================= */
 
-  const board = (root: HTMLElement, periods: Period[], endLabel: string) => {
+  const board = (root: HTMLElement, periods: Period[], endLabel: string, initial: number): Chapters => {
     const media = root.querySelector<HTMLElement>("[data-tlb-media]")!;
     const svg = root.querySelector<SVGSVGElement>("[data-tlb-svg]")!;
     const path = root.querySelector<SVGPathElement>("[data-tlb-path]")!;
@@ -790,7 +815,8 @@ const data = JSON.stringify(periods);
       return (layout ?? []).map((spot, k) => ({ ...spot, photo: periods[i].photos[k], rot: (rand() - 0.5) * 28, delay: 180 + k * 70 + rand() * 60 }));
     };
 
-    let active = last;
+    let active = initial;
+    let base = initial; // the chapter the scroll position has reached
     let shown = -1;
     const showPhotos = (i: number, firstReveal = false) => {
       if (i === shown) return;
@@ -843,18 +869,22 @@ const data = JSON.stringify(periods);
     layout();
     showPhotos(active, true);
 
-    // leave the board (mouse out): fall back to the latest chapter, like the reference
-    root.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && select(last));
+    // leave the board (mouse out): fall back to the chapter the scroll has reached
+    root.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && select(base));
 
     let firstObserve = true;
     let lastW = root.clientWidth;
+    let lastH = root.clientHeight;
     new ResizeObserver(() => {
       if (firstObserve) {
         firstObserve = false;
         return;
       }
-      if (Math.abs(root.clientWidth - lastW) < 2) return;
-      lastW = root.clientWidth;
+      const w = root.clientWidth;
+      const h = root.clientHeight;
+      if (w === 0 || (Math.abs(w - lastW) < 2 && Math.abs(h - lastH) < 2)) return;
+      lastW = w;
+      lastH = h;
       layout();
       shown = -1;
       showPhotos(active);
@@ -938,11 +968,18 @@ const data = JSON.stringify(periods);
       { threshold: Array.from({ length: 21 }, (_, i) => i / 20) }
     );
     io.observe(root);
+
+    return {
+      rest: (i: number) => {
+        base = i;
+        select(i);
+      },
+    };
   };
 
   /* ================= phones ================= */
 
-  const phone = (root: HTMLElement, periods: Period[]) => {
+  const phone = (root: HTMLElement, periods: Period[], initial: number): Chapters => {
     const chips = root.querySelector<HTMLElement>("[data-tlm-chips]")!;
     const caption = root.querySelector<HTMLElement>("[data-tlm-caption]")!;
     const strip = root.querySelector<HTMLElement>("[data-tlm-strip]")!;
@@ -958,7 +995,9 @@ const data = JSON.stringify(periods);
       chips.append(b);
       return b;
     });
+    let current = -1;
     const show = (i: number) => {
+      current = i;
       buttons.forEach((b, k) => {
         b.setAttribute("aria-selected", String(k === i));
         b.tabIndex = k === i ? 0 : -1;
@@ -981,20 +1020,126 @@ const data = JSON.stringify(periods);
         strip.append(f);
       });
     };
+    // tablist keyboard pattern: arrows move between chapters, Home/End jump to the ends
+    chips.addEventListener("keydown", (ev) => {
+      const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      if (at < 0) return;
+      const last = buttons.length - 1;
+      const next =
+        ev.key === "ArrowRight" ? (at + 1) % buttons.length
+        : ev.key === "ArrowLeft" ? (at - 1 + buttons.length) % buttons.length
+        : ev.key === "Home" ? 0
+        : ev.key === "End" ? last
+        : -1;
+      if (next < 0) return;
+      ev.preventDefault();
+      show(next);
+      buttons[next].focus();
+    });
     root.hidden = false;
-    show(periods.length - 1);
+    show(initial);
+    return { rest: (i: number) => i !== current && show(i) };
   };
 
   const wire = () => {
     const dataEl = document.querySelector<HTMLScriptElement>("[data-tl-data]");
     const desk = document.querySelector<HTMLElement>("[data-tlb]:not([data-wired])");
     const mob = document.querySelector<HTMLElement>("[data-tlm]:not([data-wired])");
+    const fallback = document.querySelector<HTMLElement>("[data-tlf]");
     if (!dataEl || !desk || !mob) return;
     desk.dataset.wired = mob.dataset.wired = "1";
     const periods = JSON.parse(dataEl.textContent ?? "[]") as Period[];
     const endLabel = JSON.parse(document.querySelector("[data-tl-end]")?.textContent ?? '""') as string;
-    if (window.matchMedia("(max-width: 860px)").matches) phone(mob, periods);
-    else board(desk, periods, endLabel);
+
+    // Build each layout the first time it's needed; switch when the screen crosses 860px
+    // (tablet rotation, window resize). The plain list only hides once a layout is built.
+    const mq = window.matchMedia("(max-width: 860px)");
+    let deskCtl: Chapters | null = null;
+    let mobCtl: Chapters | null = null;
+    const last = periods.length - 1;
+
+    /* ---- scroll mode: the track is a few screens tall and the board stays pinned while it passes ---- */
+    const section = document.querySelector<HTMLElement>("[data-tl]")!;
+    const track = section.querySelector<HTMLElement>("[data-tl-track]")!;
+    const pin = section.querySelector<HTMLElement>("[data-tl-pin]")!;
+    const ac = new AbortController();
+    document.addEventListener("astro:before-swap", () => ac.abort(), { once: true });
+
+    // pin only where the whole board fits on one screen; otherwise it scrolls like any section
+    const setScrolly = () => {
+      section.style.setProperty("--steps", String(last));
+      section.classList.add("is-scrolly");
+      if (pin.scrollHeight > window.innerHeight + 1) section.classList.remove("is-scrolly");
+    };
+    // which chapter the scroll has reached: the first above the track, the last once it's passed
+    const step = () => {
+      if (!section.classList.contains("is-scrolly")) return last;
+      const run = track.offsetHeight - window.innerHeight;
+      const progress = clamp(-track.getBoundingClientRect().top / Math.max(run, 1), 0, 0.9999);
+      return Math.floor(progress * periods.length);
+    };
+    const ctl = () => (mq.matches ? mobCtl : deskCtl);
+    const showFallback = () => {
+      desk.hidden = true;
+      mob.hidden = true;
+      if (fallback) fallback.hidden = false;
+    };
+    const build = () => {
+      if (mq.matches) {
+        desk.hidden = true;
+        mob.hidden = false;
+        mobCtl ??= phone(mob, periods, step());
+      } else {
+        mob.hidden = true;
+        desk.hidden = false;
+        deskCtl ??= board(desk, periods, endLabel, step());
+      }
+      if (fallback) fallback.hidden = true;
+    };
+    // on first load and on every later switch: if a layout fails to build, the plain list comes back
+    const apply = () => {
+      try {
+        build();
+      } catch (err) {
+        showFallback();
+        console.error(err);
+      }
+    };
+    // assume scroll mode while building (so each layout starts on the scroll's chapter), then check it fits
+    section.style.setProperty("--steps", String(last));
+    section.classList.add("is-scrolly");
+    apply();
+    setScrolly();
+
+    let reached = step();
+    ctl()?.rest(reached);
+    // one rect read per scroll event; the chapter only changes when the step does
+    const onScroll = () => {
+      const i = step();
+      if (i === reached) return;
+      reached = i;
+      ctl()?.rest(i);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true, signal: ac.signal });
+    window.addEventListener(
+      "resize",
+      () => {
+        // phones resize as the address bar moves: only act if the scroll's chapter really changed
+        setScrolly();
+        onScroll();
+      },
+      { passive: true, signal: ac.signal }
+    );
+    mq.addEventListener(
+      "change",
+      () => {
+        apply();
+        setScrolly();
+        reached = step();
+        ctl()?.rest(reached);
+      },
+      { signal: ac.signal }
+    );
   };
 
   document.addEventListener("astro:page-load", wire);

@@ -149,6 +149,10 @@ export const heroMotion = () => {
   const baby = hero.querySelector<HTMLElement>(".sticker--baby");
   const ticker = hero.querySelector<HTMLElement>(".ticker");
 
+  // take over from the CSS failsafe (which would otherwise pin opacity at 1 on slow loads)
+  [sheet, chat].forEach((el) => el && (el.style.opacity = "0"));
+  document.documentElement.classList.remove("motion-pending");
+
   if (backdrop) animate(backdrop, { scale: [1.14, 1] }, { duration: 1.8, ease: [0.22, 1, 0.36, 1] });
   if (sheet) animate(sheet, { opacity: [0, 1], y: [56, 0] }, { ...SPRING, delay: 0.05 });
   if (chat) animate(chat, { opacity: [0, 1], x: [-40, 0] }, { ...SPRING, delay: 0.18 });
@@ -285,7 +289,7 @@ export const tilt = (selector: string, max = 6) => {
   if (reducedMotion() || !finePointer()) return;
   document.querySelectorAll<HTMLElement>(`${selector}:not([data-tilt])`).forEach((card) => {
     card.dataset.tilt = "1";
-    card.style.transformPerspective = "900px";
+    animate(card, { transformPerspective: 900 }, { duration: 0 });
     card.addEventListener("pointerenter", () => {
       animate(card, { y: -6, scale: 1.01 }, SPRING);
     });

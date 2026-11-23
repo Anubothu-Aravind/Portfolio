@@ -404,6 +404,11 @@ const builtFor = [
 </style>
 
 <script>
+  // one document-level Escape handler for any open photo sticker (module scripts run once)
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") document.querySelectorAll(".sticker.is-open").forEach((el) => el.classList.remove("is-open"));
+  });
+
   document.addEventListener("astro:page-load", () => {
     const ticker = document.querySelector<HTMLElement>("[data-ticker]:not([data-wired])");
     if (ticker) {
@@ -420,9 +425,6 @@ const builtFor = [
       btn.dataset.wired = "1";
       btn.addEventListener("click", () => btn.classList.toggle("is-open"));
       btn.addEventListener("blur", () => btn.classList.remove("is-open"));
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") btn.classList.remove("is-open");
-      });
     });
   });
 </script>

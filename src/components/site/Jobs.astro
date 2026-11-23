@@ -1,55 +1,79 @@
 ---
 import { experience } from "@/data/portfolio";
 
-const jobs = experience.map((j) => ({
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const isMonth = (s: string) => MONTHS.includes(s.trim().split(" ")[0]);
+// "Aug 2025 – Nov 2025" -> "aug to nov 2025"; an open end ("Present") reads "now"
+const span = (duration: string) => {
+  const [from, to] = duration.split("–").map((s) => s.trim());
+  const [fm, fy] = from.split(" ");
+  if (!isMonth(to)) return `${fm.toLowerCase()} ${fy} to now`;
+  const [, ty] = to.split(" ");
+  return `${fm.toLowerCase()}${fy === ty ? "" : ` ${fy}`} to ${to.toLowerCase()}`;
+};
+
+// newest first: the most recent job is what a visitor reads first
+const jobs = [...experience].reverse().map((j, k, all) => ({
   ...j,
+  n: String(all.length - k).padStart(2, "0"),
+  name: (j.project ? j.company : j.type).toLowerCase(),
+  span: span(j.duration),
   where: j.project ? `${j.company}, on ${j.project}` : "Clients across sports, retail and finance",
 }));
 ---
 
-<section id="jobs" class="section jobs" aria-labelledby="jobs-title">
+<section id="jobs" class="section jobs" aria-labelledby="jobs-title" data-jobs>
   <div class="container">
     <h2 id="jobs-title" class="jobs__title" data-words>
-      <span class="jobs__accent">where i've worked</span>, so far.
+      <span class="jobs__accent">where i’ve worked</span>, so far.
     </h2>
 
-    <div class="jobs__wrap" data-jobs>
-    <span class="jobs__rail" aria-hidden="true"><span class="jobs__fill" data-jobs-fill></span></span>
-    <ol class="jobs__list">
+    <ol class="ledger">
       {
-        [...jobs].reverse().map((j) => (
-          <li class="job">
-            <div class="job__when" data-reveal>
-              <span class="job__dot" aria-hidden="true"></span>
-              <span class="mono">{j.duration.replace(" – ", " to ")}</span>
-              <span class="job__type">{j.type}</span>
-            </div>
-            <article class="job__card" data-reveal>
-              <header class="job__head">
-                <h3 class="job__role">{j.role}</h3>
-                <p class="job__where">{j.where}</p>
-              </header>
-              <ul class="job__points">
-                {j.impact.map((point) => (
-                  <li data-reveal>{point}</li>
-                ))}
-              </ul>
-              <p class="job__chips">
-                {j.stack.map((s) => (
-                  <span>{s}</span>
-                ))}
+        jobs.map((j) => (
+          <li class={`job job--${j.id}`} data-job>
+            <div class="job__lead">
+              <span class="job__n">{j.n}</span>
+              <p class="job__name">
+                <span class="job__band" aria-hidden="true" />
+                <span class="job__word">{j.name}</span>
               </p>
-              {j.github && (
-                <a class="link job__link" href={j.github} target="_blank" rel="noopener noreferrer">
-                  View the HonestAI source
-                </a>
-              )}
-            </article>
+            </div>
+
+            <div class="job__body">
+              <p class="job__meta">
+                <span class="job__span">{j.span}</span>
+                <span class="job__type">{j.type}</span>
+              </p>
+              <h3 class="job__role">{j.role}</h3>
+              <p class="job__where">{j.where}</p>
+              <p class="job__stack">
+                <span class="job__label">built with</span> {j.stack.join(", ")}
+              </p>
+
+              <div class="job__actions">
+                <details class="job__more">
+                  <summary class="job__toggle">
+                    <span class="job__plus" aria-hidden="true" />
+                    what i did there
+                  </summary>
+                  <ol class="job__points">
+                    {j.impact.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ol>
+                </details>
+                {j.github && (
+                  <a class="link job__link" href={j.github} target="_blank" rel="noopener noreferrer">
+                    View the HonestAI source
+                  </a>
+                )}
+              </div>
+            </div>
           </li>
         ))
       }
     </ol>
-    </div>
   </div>
 </section>
 
@@ -64,187 +88,317 @@ const jobs = experience.map((j) => ({
     letter-spacing: -0.015em;
     color: var(--muted);
     line-height: 1.3;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .jobs__accent {
     color: var(--signal-text);
   }
 
-  .jobs__wrap {
-    position: relative;
-  }
-
-  .jobs__list {
-    position: relative;
-    list-style: none;
+  /* ---------- the ledger: one wide row per job ---------- */
+  .ledger {
     margin: 0;
     padding: 0;
-    display: grid;
-    gap: 28px;
-  }
-
-  .jobs__rail {
-    position: absolute;
-    left: 5px;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    border-radius: 2px;
-    background: var(--line-strong);
-    overflow: hidden;
-  }
-
-  .jobs__fill {
-    position: absolute;
-    inset: 0;
-    background: var(--signal);
-    transform-origin: top;
-    transform: scaleY(1);
-  }
-
-  :global(.motion-on) .jobs__fill {
-    transform: scaleY(0);
+    list-style: none;
+    border-bottom: 1px solid var(--line-strong);
   }
 
   .job {
     display: grid;
-    gap: 12px;
-    padding-left: 32px;
-  }
-
-  .job__when {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 12px;
-    color: var(--ink-2);
-  }
-
-  .job__dot {
-    position: absolute;
-    left: -32px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--card);
-    border: 2px solid var(--ink);
-  }
-
-  .job__type {
-    padding: 2px 10px;
-    border-radius: var(--r-pill);
-    background: var(--card);
-    border: 1px solid var(--line);
-    font-size: 0.8125rem;
-  }
-
-  .job__card {
-    display: grid;
-    gap: 16px;
-    padding: 24px;
-    border-radius: var(--r-lg);
-    background: var(--card);
-    border: 1px solid var(--line);
-    transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-1) linear;
-  }
-
-  .job__card:hover {
-    box-shadow: var(--shadow-lift);
-    border-color: var(--line-strong);
-  }
-
-  .job__role {
-    font-size: var(--step-2);
-  }
-
-  .job__where {
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .job__points {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: 10px;
-  }
-
-  .job__points li {
-    position: relative;
-    padding-left: 20px;
-    color: var(--ink-2);
-  }
-
-  .job__points li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    background: var(--mark-soft);
-    transform: rotate(45deg);
-  }
-
-  .job__chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 0;
-  }
-
-  .job__chips span {
-    padding: 3px 10px;
-    border-radius: var(--r-pill);
-    background: var(--paper-2);
-    color: var(--ink-2);
-    font-size: 0.8125rem;
-  }
-
-  .job__link {
-    justify-self: start;
-    font-weight: 600;
+    gap: 20px;
+    padding-block: 40px;
+    border-top: 1px solid var(--line-strong);
   }
 
   @media (min-width: 900px) {
     .job {
-      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
-      gap: 40px;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 48px;
       align-items: start;
     }
+  }
 
-    .job__when {
-      position: sticky;
-      top: 96px;
-      flex-direction: column;
-      align-items: flex-start;
+  /* the company, set huge over a highlighter band (the same mark as the name in the hero) */
+  .job__lead {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .job__n {
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .job__name {
+    position: relative;
+    justify-self: start;
+    min-width: 0;
+    font-size: clamp(3rem, 1.6rem + 5.2vw, 6.5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    color: var(--ink);
+    overflow-wrap: break-word;
+  }
+
+  .job__word {
+    position: relative;
+  }
+
+  .job__band {
+    position: absolute;
+    left: -0.06em;
+    right: -0.06em;
+    bottom: 0.06em;
+    height: 0.4em;
+    border-radius: 0.08em;
+    transform-origin: left bottom;
+  }
+
+  /* only the sweep in (and the hover) animate: hiding it before the row is reached is instant, never a visible retract */
+  .job.is-lit .job__band {
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .job--thoughtiv .job__band {
+    background: var(--name-bg);
+  }
+
+  .job--freelance .job__band {
+    background: var(--mark);
+  }
+
+  /* swept in when the row scrolls into view; drawn in full without scripts */
+  :global(.motion-on) .job:not(.is-lit) .job__band {
+    transform: scaleX(0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .job.is-lit:hover .job__band {
+      transform: scaleY(1.9);
+      transition-duration: var(--dur-3);
+    }
+  }
+
+  /* ---------- the facts ---------- */
+  .job__body {
+    display: grid;
+    justify-items: start;
+    gap: 8px;
+    min-width: 0;
+    padding-top: 28px;
+  }
+
+  .job__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .job__span {
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .job__type {
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 0.8125rem;
+  }
+
+  .job__role {
+    margin-top: 4px;
+    font-size: var(--step-2);
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .job__where {
+    color: var(--muted);
+  }
+
+  .job__stack {
+    max-width: 52ch;
+    color: var(--ink-2);
+    font-size: var(--step--1);
+  }
+
+  .job__label {
+    color: var(--muted);
+  }
+
+  .job__actions {
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  /* ---------- "what i did there": native disclosure, so keyboards and screen readers get it for free ---------- */
+  .job__more {
+    width: 100%;
+  }
+
+  .job__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 16px 0 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: var(--card);
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color var(--dur-1) linear, transform var(--dur-1) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+  }
+
+  .job__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .job__toggle:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+
+  .job__toggle:active {
+    transform: scale(0.96);
+  }
+
+  .job__toggle:focus-visible {
+    outline: 2px solid var(--signal-text);
+    outline-offset: 2px;
+  }
+
+  /* a plus that turns into a cross when open */
+  .job__plus {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    transition: transform var(--dur-2) var(--ease-spring);
+  }
+
+  .job__plus::before,
+  .job__plus::after {
+    content: "";
+    position: absolute;
+    inset: 5px 0;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .job__plus::after {
+    rotate: 90deg;
+  }
+
+  .job__more[open] .job__plus {
+    transform: rotate(45deg);
+  }
+
+  .job__points {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0 8px;
+    padding: 0;
+    list-style: none;
+    counter-reset: point;
+    max-width: 60ch;
+  }
+
+  .job__more[open] .job__points {
+    animation: points-in var(--dur-3) var(--ease-out) both;
+  }
+
+  @keyframes points-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  .job__points li {
+    counter-increment: point;
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    color: var(--ink-2);
+  }
+
+  .job__points li::before {
+    content: counter(point, decimal-leading-zero);
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+
+  .job__link {
+    font-weight: 600;
+  }
+
+  .job__link:focus-visible {
+    outline: 2px solid var(--signal-text);
+    outline-offset: 3px;
+  }
+
+  .job__link:active {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 899px) {
+    .job__body {
+      padding-top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .job__band,
+    .job__plus,
+    .job__toggle {
+      transition: none;
+    }
+
+    .job__more[open] .job__points {
+      animation: none;
     }
   }
 </style>
 
 <script>
-  import { scroll, reducedMotion } from "@/lib/motion";
+  import { reducedMotion } from "@/lib/motion";
 
-  // the rail fills as you read down the jobs
+  // each company's highlighter sweeps in once, as its row comes into view
   document.addEventListener("astro:page-load", () => {
-    const list = document.querySelector<HTMLElement>("[data-jobs]:not([data-wired])");
-    const fill = list?.querySelector<HTMLElement>("[data-jobs-fill]");
-    if (!list || !fill) return;
-    list.dataset.wired = "1";
-    if (reducedMotion()) {
-      fill.style.transform = "scaleY(1)";
+    const section = document.querySelector<HTMLElement>("[data-jobs]:not([data-wired])");
+    if (!section) return;
+    section.dataset.wired = "1";
+    const rows = [...section.querySelectorAll<HTMLElement>("[data-job]")];
+    if (reducedMotion() || !("IntersectionObserver" in window)) {
+      rows.forEach((r) => r.classList.add("is-lit"));
       return;
     }
-    scroll(
-      (p: number) => {
-        fill.style.transform = `scaleY(${p})`;
-      },
-      { target: list, offset: ["start 75%", "end 60%"] }
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          en.target.classList.add("is-lit");
+          io.unobserve(en.target);
+        }),
+      { threshold: 0.4 }
     );
+    rows.forEach((r) => io.observe(r));
+    document.addEventListener("astro:before-swap", () => io.disconnect(), { once: true });
   });
 </script>
