@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { personal, education, experience, projects, capabilities, certifications } from "@/data/portfolio";
+import type { Project, ProjectStatus } from "@/data/portfolio";
 import { ProfileImage, getStaggerStyle } from "./Outputs";
 
 interface OutputProps {
@@ -460,152 +461,140 @@ export const SkillsOutput = () => {
   );
 };
 
+const STATUS_LABEL: Record<ProjectStatus, string> = {
+  "in-use": "IN USE",
+  done: "DONE",
+  retired: "RETIRED",
+};
+
+const STATUS_COLOR: Record<ProjectStatus, string> = {
+  "in-use": "var(--t-green)",
+  done: "var(--t-text-mid)",
+  retired: "var(--t-red)",
+};
+
+const findProject = (query: string) => {
+  const q = query.trim().toLowerCase();
+  const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return projects.find(
+    (p) => p.id === q || p.name.toLowerCase() === q || squash(p.id) === squash(q) || squash(p.name) === squash(q)
+  );
+};
+
 export const ProjectsOutput = ({ onExecuteCmd }: OutputProps) => {
-  const tableProjects = [
-    { pid: "1042", id: "contexta-ai", name: "Contexta AI", status: "RUNNING", stack: "FastAPI · LangChain · VectorDB" },
-    { pid: "1089", id: "pro-talent-connect", name: "Pro Talent Connect", status: "RUNNING", stack: "NodeJS · Express · MongoDB" },
-    { pid: "1023", id: "docDistill", name: "DocDistill", status: "RUNNING", stack: "FastAPI · LangChain · FAISS" },
-    { pid: "0756", id: "auto-committer", name: "GitHub Auto Committer", status: "RUNNING", stack: "Python · GitHub API" },
-    { pid: "0891", id: "pocket-soccer-scout", name: "Pocket Soccer Scout", status: "EXITED", stack: "NodeJS · Express · MongoDB" },
-  ];
+  const exampleId = projects[0]?.id ?? "";
 
   return (
     <div className="output-block">
       <div style={{ color: "var(--t-dim)", marginBottom: "8px" }}>$ ps aux | grep projects</div>
       <div style={{ overflowX: "auto" }}>
-        <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: "780px", minWidth: "500px" }}>
+        <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: "900px", minWidth: "560px" }}>
           <thead>
             <tr style={{ color: "var(--t-dim)", borderBottom: "1px solid var(--t-dimmer)", textAlign: "left" }}>
-              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "80px" }}>PID</th>
-              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "200px" }}>NAME</th>
-              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "100px" }}>STATUS</th>
-              <th style={{ padding: "4px 8px", fontWeight: "bold" }}>STACK</th>
+              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "48px" }}>#</th>
+              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "240px" }}>NAME</th>
+              <th style={{ padding: "4px 8px", fontWeight: "bold", width: "90px" }}>STATUS</th>
+              <th style={{ padding: "4px 8px", fontWeight: "bold" }}>TYPE</th>
             </tr>
           </thead>
           <tbody>
-            {tableProjects.map((p, pIdx) => (
+            {projects.map((p, pIdx) => (
               <tr
-                key={p.pid}
+                key={p.id}
                 className="term-row staggered-row"
                 style={getStaggerStyle(pIdx)}
                 onClick={() => onExecuteCmd(`project ${p.id}`)}
               >
-                <td style={{ padding: "6px 8px", color: "var(--t-dim)" }}>{p.pid}</td>
+                <td style={{ padding: "6px 8px", color: "var(--t-dim)" }}>{p.index}</td>
                 <td style={{ padding: "6px 8px" }}>
                   <span className="cmd-link">{p.name}</span>
                 </td>
-                <td style={{ padding: "6px 8px", color: p.status === "RUNNING" ? "var(--t-green)" : "var(--t-red)", fontWeight: "bold" }}>
-                  {p.status}
+                <td style={{ padding: "6px 8px", color: STATUS_COLOR[p.status], fontWeight: "bold" }}>
+                  {STATUS_LABEL[p.status]}
                 </td>
-                <td style={{ padding: "6px 8px", color: "var(--t-text-mid)" }}>{p.stack}</td>
+                <td style={{ padding: "6px 8px", color: "var(--t-text-mid)" }}>{p.category}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div style={{ color: "var(--t-dim)", fontSize: "12px", marginTop: "10px" }}>
-        Tip: Click on any project name or type <span className="text-t-accent">project &lt;name&gt;</span> (e.g., <span className="cmd-link" onClick={() => onExecuteCmd("project contexta-ai")}>project contexta-ai</span>) to view its rich detail page.
+        Tip: click a project name or type <span className="text-t-accent">project &lt;name&gt;</span> (e.g.{" "}
+        <span className="cmd-link" onClick={() => onExecuteCmd(`project ${exampleId}`)}>project {exampleId}</span>) to see its details.
       </div>
     </div>
   );
 };
 
 export const ProjectDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
+  const exampleId = projects[0]?.id ?? "";
+
   if (!args) {
     return (
       <div className="output-block" style={{ color: "var(--t-red)" }}>
-        Error: Please specify a project ID. E.g., `project contexta-ai`. Type `projects` to see list.
+        Error: please specify a project, e.g. `project {exampleId}`. Type `projects` to see the list.
       </div>
     );
   }
 
-  const projId = args.trim().toLowerCase();
-  const proj = projects.find((p) => p.id.toLowerCase() === projId || p.name.toLowerCase() === projId || p.id.toLowerCase().replace(/-/g, "") === projId.replace(/-/g, ""));
+  const proj = findProject(args);
 
   if (!proj) {
-    // Check if it's the auto-committer
-    if (projId === "auto-committer" || projId === "github-auto-committer" || projId === "commit") {
-      return (
-        <div className="output-block" style={{ maxWidth: "700px" }}>
-          <div style={{ color: "var(--t-accent)", fontWeight: "bold", fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-            GitHub Auto Committer
-          </div>
-          <div style={{ color: "var(--t-blue)", marginBottom: "8px" }}>Automation & Integration Platform</div>
-          <div style={{ marginBottom: "12px" }}>
-            <strong>Problem:</strong> Managing structured schedule testing workflows manually is labor-intensive and prone to developer drift.
-            <br />
-            <strong>Solution:</strong> Developed a scheduler platform using the GitHub REST API and secure execution.
-          </div>
-          <ul style={{ paddingLeft: "20px", color: "var(--t-text-mid)", fontSize: "13px" }}>
-            <li>Automated commit scheduling workflows.</li>
-            <li>Randomized execution logic to mimic natural activity.</li>
-            <li>Fully integrated with the GitHub REST API securely.</li>
-            <li>Deployed containerized instance to Render.</li>
-          </ul>
-          <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
-            <a href="https://github.com/Anubothu-Aravind/Commit" target="_blank" rel="noopener noreferrer" className="ext-link">
-              GitHub Repo →
-            </a>
-            <a href="https://refactored-waffle-2ja9.onrender.com" target="_blank" rel="noopener noreferrer" className="ext-link">
-              Deployment Link →
-            </a>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="output-block" style={{ color: "var(--t-red)" }}>
-        Error: Project "{args}" not found. Type <span className="cmd-link" onClick={() => onExecuteCmd("projects")}>projects</span> to see all valid IDs.
+        Error: project "{args}" not found. Type <span className="cmd-link" onClick={() => onExecuteCmd("projects")}>projects</span> to see all valid names.
       </div>
     );
   }
 
   return (
-    <div className="output-block" style={{ maxWidth: "700px" }}>
+    <div className="output-block" style={{ maxWidth: "720px" }}>
       <div style={{ color: "var(--t-accent)", fontWeight: "bold", fontSize: "1.2rem", marginBottom: "0.25rem" }}>
-        {proj.name}
+        {proj.fullTitle}
       </div>
-      <div style={{ color: "var(--t-blue)", fontWeight: "bold", marginBottom: "0.5rem" }}>
-        {proj.category} — {proj.tagline}
+      <div style={{ color: "var(--t-blue)", marginBottom: "0.5rem" }}>
+        {proj.role}, {proj.category}
       </div>
 
       <div style={{ border: "1px solid var(--t-dimmer)", padding: "12px", background: "var(--t-surface)", marginBottom: "12px" }}>
         <div><strong>Problem:</strong> <span style={{ color: "var(--t-text-mid)" }}>{proj.problem}</span></div>
-        <div style={{ marginTop: "4px" }}><strong>Solution:</strong> <span style={{ color: "var(--t-text-mid)" }}>{proj.solution}</span></div>
-      </div>
-
-      <div style={{ color: "var(--t-text-mid)", lineHeight: "1.6", marginBottom: "12px" }}>
-        {proj.description}
+        <div style={{ marginTop: "6px" }}><strong>Result:</strong> <span style={{ color: "var(--t-text-mid)" }}>{proj.impact}</span></div>
       </div>
 
       <div style={{ marginBottom: "12px" }}>
-        <strong>Key Architectural Highlights:</strong>
+        <strong>What I built:</strong>
         <ul style={{ paddingLeft: "20px", marginTop: "4px", fontSize: "13px" }}>
-          {proj.highlights.map((h, idx) => (
-            <li key={idx} style={{ color: "var(--t-text-mid)" }}>{h}</li>
+          {proj.highlights.map((h) => (
+            <li key={h} style={{ color: "var(--t-text-mid)" }}>{h}</li>
           ))}
         </ul>
       </div>
 
-      <div style={{ marginBottom: "12px" }}>
-        <strong>Stack:</strong>{" "}
-        {proj.stack.map((s) => (
-          <span key={s} style={{ display: "inline-block", marginRight: "6px", color: "var(--t-dim)", border: "1px solid var(--t-border)", padding: "0 6px", fontSize: "12px" }}>
-            {s}
-          </span>
-        ))}
-      </div>
+      {proj.stack.length > 0 && (
+        <div style={{ marginBottom: "12px" }}>
+          <strong>Stack:</strong>{" "}
+          {proj.stack.map((s) => (
+            <span key={s} style={{ display: "inline-block", marginRight: "6px", marginBottom: "4px", color: "var(--t-dim)", border: "1px solid var(--t-border)", padding: "0 6px", fontSize: "12px" }}>
+              {s}
+            </span>
+          ))}
+        </div>
+      )}
 
-      <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
+      <div style={{ display: "flex", gap: "16px", marginTop: "12px", flexWrap: "wrap" }}>
         {proj.github && (
           <a href={proj.github} target="_blank" rel="noopener noreferrer" className="ext-link">
-            GitHub Repo →
+            View source
+          </a>
+        )}
+        {proj.npm && (
+          <a href={proj.npm} target="_blank" rel="noopener noreferrer" className="ext-link">
+            View on npm
           </a>
         )}
         {proj.live && (
           <a href={proj.live} target="_blank" rel="noopener noreferrer" className="ext-link">
-            Live Demo →
+            Open live site
           </a>
         )}
       </div>
@@ -613,8 +602,12 @@ export const ProjectDetailOutput = ({ args, onExecuteCmd }: OutputProps) => {
   );
 };
 
+const SHOWCASE_IDS = ["logistics-optimizer", "football-club-crm", "pyodide-sudoku"];
+
 export const ShowcaseOutput = ({ onExecuteCmd }: OutputProps) => {
-  const showcaseProjects = projects.slice(0, 3);
+  const showcaseProjects = SHOWCASE_IDS.map((id) => projects.find((p) => p.id === id)).filter(
+    (p): p is Project => Boolean(p)
+  );
 
   return (
     <div className="output-block">
@@ -628,24 +621,16 @@ export const ShowcaseOutput = ({ onExecuteCmd }: OutputProps) => {
               </span>
               <span style={{ color: "var(--t-blue)", fontSize: "12px" }}>{p.category}</span>
             </div>
-            <div style={{ color: "var(--t-text-mid)", fontSize: "13px", marginBottom: "8px" }}>
-              {p.tagline}
-            </div>
-            <div style={{ color: "var(--t-dim)", fontSize: "12px", marginBottom: "8px" }}>
-              {p.stack.join(" · ")}
-            </div>
+            <div style={{ color: "var(--t-text-mid)", fontSize: "13px", marginBottom: "4px" }}>{p.tagline}</div>
+            <div style={{ color: "var(--t-text)", fontSize: "13px", marginBottom: "8px" }}>{p.impact}</div>
+            <div style={{ color: "var(--t-dim)", fontSize: "12px", marginBottom: "8px" }}>{p.stack.join(", ")}</div>
             <div style={{ display: "flex", gap: "16px" }}>
               <span className="cmd-link" style={{ fontSize: "12px" }} onClick={() => onExecuteCmd(`project ${p.id}`)}>
-                View Details [cmd] →
+                View details
               </span>
               {p.github && (
                 <a href={p.github} target="_blank" rel="noopener noreferrer" className="ext-link" style={{ fontSize: "12px" }}>
-                  code →
-                </a>
-              )}
-              {p.live && (
-                <a href={p.live} target="_blank" rel="noopener noreferrer" className="ext-link" style={{ fontSize: "12px" }}>
-                  live →
+                  View source
                 </a>
               )}
             </div>

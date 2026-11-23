@@ -1,0 +1,202 @@
+---
+import { personal } from "@/data/portfolio";
+---
+
+<footer id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="container contact__inner">
+    <figure class="contact__photo contact__photo--a" aria-hidden="true" data-float="a">
+      <img src="/assets/images/life/yellow-kurta.webp" alt="" width="681" height="1280" loading="lazy" />
+    </figure>
+    <figure class="contact__photo contact__photo--b" aria-hidden="true" data-float="b">
+      <img src="/assets/images/life/event-blazer.webp" alt="" width="853" height="1280" loading="lazy" />
+    </figure>
+
+    <div class="contact__copy">
+      <h2 id="contact-title" class="contact__title" data-words>let's build something people actually use.</h2>
+      <div class="contact__actions" data-reveal>
+        <a class="btn" href={`mailto:${personal.email}`}>Email me</a>
+        <button class="btn btn--quiet" type="button" data-copy={personal.email} aria-label="Copy email address">
+          <span class="email__label" data-label-idle>Copy {personal.email}</span>
+          <span class="email__label email__label--done" data-label-done aria-hidden="true">Copied to clipboard</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="contact__meta" data-reveal>
+      <p>
+        It's <span class="mono" data-clock>--:--</span> in Vijayawada right now.
+      </p>
+      <ul class="contact__links">
+        <li><a class="link" href={personal.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a class="link" href={personal.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a class="link" href="/resume.pdf" download="Anubothu_Aravind_Resume.pdf">Resume</a></li>
+        <li><a class="link" href="/terminal">Terminal version</a></li>
+      </ul>
+    </div>
+    <p class="contact__fine" data-reveal>Aravind Anubothu, {new Date().getFullYear()}</p>
+  </div>
+</footer>
+
+<style>
+  .contact {
+    position: relative;
+    overflow: clip;
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: clamp(96px, 14vw, 176px) 104px;
+  }
+
+  .contact :global(.link) {
+    color: var(--paper);
+    background-image: linear-gradient(var(--paper), var(--paper));
+  }
+
+  .contact__inner {
+    position: relative;
+    display: grid;
+    gap: 32px;
+  }
+
+  .contact__copy {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 28px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .contact__title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    max-width: 16ch;
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .contact :global(.btn) {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  .contact :global(.btn--quiet) {
+    background: transparent;
+    color: var(--paper);
+    border-color: color-mix(in srgb, var(--paper) 30%, transparent);
+  }
+
+  .contact :global([data-copy].is-done) {
+    background: var(--mark);
+    color: var(--mark-ink);
+    border-color: var(--mark);
+  }
+
+  .contact__photo {
+    position: absolute;
+    z-index: 1;
+    margin: 0;
+    width: clamp(120px, 14vw, 200px);
+    padding: 8px 8px 28px;
+    background: var(--paper);
+    border-radius: 6px;
+    box-shadow: var(--shadow-photo);
+    transition: transform var(--dur-3) var(--ease-spring);
+  }
+
+  .contact__photo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .contact__photo--a {
+    left: 0;
+    top: -40px;
+    transform: rotate(-8deg);
+  }
+
+  .contact__photo--b {
+    right: 0;
+    top: 20px;
+    transform: rotate(7deg);
+  }
+
+
+  @media (max-width: 900px) {
+    .contact__photo {
+      display: none;
+    }
+  }
+
+  .contact__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 32px;
+    margin-top: 48px;
+    border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
+  .contact__links a {
+    display: inline-block;
+    padding-block: 6px;
+  }
+
+  .contact__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact__fine {
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 50%, transparent);
+  }
+</style>
+
+<script>
+  import { animate, scroll, reducedMotion } from "@/lib/motion";
+
+  // the two portraits drift up and straighten as the footer scrolls in
+  document.addEventListener("astro:page-load", () => {
+    const footer = document.querySelector<HTMLElement>("#contact");
+    if (!footer || footer.dataset.float || reducedMotion()) return;
+    footer.dataset.float = "1";
+    const a = footer.querySelector<HTMLElement>('[data-float="a"]');
+    const b = footer.querySelector<HTMLElement>('[data-float="b"]');
+    const opts = { target: footer, offset: ["start end", "end end"] } as const;
+    if (a) scroll(animate(a, { y: [160, 0], rotate: [-18, -6] }, { ease: "linear" }), opts);
+    if (b) scroll(animate(b, { y: [220, 0], rotate: [16, 5] }, { ease: "linear" }), opts);
+  });
+
+  const tick = () => {
+    const el = document.querySelector<HTMLElement>("[data-clock]");
+    if (!el) return;
+    el.textContent = new Intl.DateTimeFormat("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "Asia/Kolkata",
+    }).format(new Date());
+  };
+
+  let timer: number | undefined;
+  document.addEventListener("astro:page-load", () => {
+    tick();
+    window.clearInterval(timer);
+    timer = window.setInterval(tick, 30_000);
+  });
+</script>

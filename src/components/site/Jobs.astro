@@ -1,0 +1,250 @@
+---
+import { experience } from "@/data/portfolio";
+
+const jobs = experience.map((j) => ({
+  ...j,
+  where: j.project ? `${j.company}, on ${j.project}` : "Clients across sports, retail and finance",
+}));
+---
+
+<section id="jobs" class="section jobs" aria-labelledby="jobs-title">
+  <div class="container">
+    <h2 id="jobs-title" class="jobs__title" data-words>
+      <span class="jobs__accent">where i've worked</span>, so far.
+    </h2>
+
+    <div class="jobs__wrap" data-jobs>
+    <span class="jobs__rail" aria-hidden="true"><span class="jobs__fill" data-jobs-fill></span></span>
+    <ol class="jobs__list">
+      {
+        [...jobs].reverse().map((j) => (
+          <li class="job">
+            <div class="job__when" data-reveal>
+              <span class="job__dot" aria-hidden="true"></span>
+              <span class="mono">{j.duration.replace(" – ", " to ")}</span>
+              <span class="job__type">{j.type}</span>
+            </div>
+            <article class="job__card" data-reveal>
+              <header class="job__head">
+                <h3 class="job__role">{j.role}</h3>
+                <p class="job__where">{j.where}</p>
+              </header>
+              <ul class="job__points">
+                {j.impact.map((point) => (
+                  <li data-reveal>{point}</li>
+                ))}
+              </ul>
+              <p class="job__chips">
+                {j.stack.map((s) => (
+                  <span>{s}</span>
+                ))}
+              </p>
+              {j.github && (
+                <a class="link job__link" href={j.github} target="_blank" rel="noopener noreferrer">
+                  View the HonestAI source
+                </a>
+              )}
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .jobs {
+    background: var(--paper-2);
+  }
+
+  .jobs__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--muted);
+    line-height: 1.3;
+    margin-bottom: 40px;
+  }
+
+  .jobs__accent {
+    color: var(--signal-text);
+  }
+
+  .jobs__wrap {
+    position: relative;
+  }
+
+  .jobs__list {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 28px;
+  }
+
+  .jobs__rail {
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--line-strong);
+    overflow: hidden;
+  }
+
+  .jobs__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--signal);
+    transform-origin: top;
+    transform: scaleY(1);
+  }
+
+  :global(.motion-on) .jobs__fill {
+    transform: scaleY(0);
+  }
+
+  .job {
+    display: grid;
+    gap: 12px;
+    padding-left: 32px;
+  }
+
+  .job__when {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    color: var(--ink-2);
+  }
+
+  .job__dot {
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--ink);
+  }
+
+  .job__type {
+    padding: 2px 10px;
+    border-radius: var(--r-pill);
+    background: var(--card);
+    border: 1px solid var(--line);
+    font-size: 0.8125rem;
+  }
+
+  .job__card {
+    display: grid;
+    gap: 16px;
+    padding: 24px;
+    border-radius: var(--r-lg);
+    background: var(--card);
+    border: 1px solid var(--line);
+    transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-1) linear;
+  }
+
+  .job__card:hover {
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  .job__role {
+    font-size: var(--step-2);
+  }
+
+  .job__where {
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .job__points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .job__points li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--ink-2);
+  }
+
+  .job__points li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--mark-soft);
+    transform: rotate(45deg);
+  }
+
+  .job__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .job__chips span {
+    padding: 3px 10px;
+    border-radius: var(--r-pill);
+    background: var(--paper-2);
+    color: var(--ink-2);
+    font-size: 0.8125rem;
+  }
+
+  .job__link {
+    justify-self: start;
+    font-weight: 600;
+  }
+
+  @media (min-width: 900px) {
+    .job {
+      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+      gap: 40px;
+      align-items: start;
+    }
+
+    .job__when {
+      position: sticky;
+      top: 96px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  import { scroll, reducedMotion } from "@/lib/motion";
+
+  // the rail fills as you read down the jobs
+  document.addEventListener("astro:page-load", () => {
+    const list = document.querySelector<HTMLElement>("[data-jobs]:not([data-wired])");
+    const fill = list?.querySelector<HTMLElement>("[data-jobs-fill]");
+    if (!list || !fill) return;
+    list.dataset.wired = "1";
+    if (reducedMotion()) {
+      fill.style.transform = "scaleY(1)";
+      return;
+    }
+    scroll(
+      (p: number) => {
+        fill.style.transform = `scaleY(${p})`;
+      },
+      { target: list, offset: ["start 75%", "end 60%"] }
+    );
+  });
+</script>

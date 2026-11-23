@@ -1,0 +1,428 @@
+---
+import ChatPanel from "./ChatPanel.astro";
+import { education, currentStudy } from "@/data/portfolio";
+
+const builtFor = [
+  "Thoughtiv",
+  "a football club",
+  "Pro Talent Connect",
+  "Vastrams",
+  "KL University AI and DS",
+  "Intelligentsia Club",
+  "NSS Unit 8",
+];
+---
+
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <img
+    class="hero__backdrop"
+    src="/assets/images/life/at-the-laptop.webp"
+    alt=""
+    width="960"
+    height="1280"
+    fetchpriority="high"
+  />
+
+  <div class="gate-veil" aria-hidden="true" data-gate-veil></div>
+
+  <div class="hero__frame">
+    <div class="hero__chat">
+      <ChatPanel />
+    </div>
+
+    <div class="sheet">
+      <p class="sheet__note mono">currently: {currentStudy.degree} {currentStudy.field}, {currentStudy.year}</p>
+
+      <div class="sheet__story">
+        <span class="sticker sticker--portrait" aria-hidden="true">
+          <img src="/assets/images/life/portrait-night.webp" alt="" width="714" height="714" />
+        </span>
+
+        <h1 id="hero-title" class="story">
+          i am <span class="name">aravind</span>, a <b>full-stack and AI developer</b> from{" "}
+          <s>tenali</s> to <b>KL University</b>.
+        </h1>
+
+        <p class="story">
+          it all started here{" "}
+          <button class="sticker sticker--baby" type="button" aria-label="Show baby photo" data-peek>
+            <img src="/assets/images/life/baby.webp" alt="Aravind as a baby, held by family" width="440" height="440" />
+          </button>, and somewhere along the way i started building things people use.
+        </p>
+
+        <p class="story">
+          these days that means a <a class="hl" href="/projects/football-club-crm">football club CRM</a> a club runs every day,
+          a <a class="hl" href="/projects/pro-talent-connect">talent-scouting platform</a> that's live, and an{" "}
+          <a class="hl" href="/projects/ai-interview">AI interview coach</a> that listens and scores your answers.
+        </p>
+
+        <p class="story">
+          {education.degree.replace("Bachelor of Technology (B.Tech)", "B.Tech")} done with a <b>{education.cgpa.replace(" / 10", "")} CGPA</b>. now an M.Tech, and{" "}
+          <a class="hl hl--go" href="#work">open to work</a>.
+        </p>
+      </div>
+
+      <div class="ticker" data-ticker>
+        <p class="ticker__label">built for and with</p>
+        <div class="ticker__viewport">
+          <ul class="ticker__track" data-ticker-track>
+            {builtFor.map((name) => <li>{name}</li>)}
+            {
+              builtFor.map((name) => (
+                <li aria-hidden="true" class="ticker__dup">
+                  {name}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <button class="ticker__pause" type="button" aria-pressed="false" aria-label="Pause the list" data-ticker-toggle>
+          <svg class="ticker__icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+          <svg class="ticker__icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10-6.5z" fill="currentColor"></path></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    padding: 16px;
+    min-height: 100svh;
+  }
+
+  .hero__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 35%;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, var(--scrim-top), var(--scrim-bottom));
+    pointer-events: none;
+  }
+
+  .gate-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    visibility: hidden;
+    background: var(--card);
+    pointer-events: none;
+  }
+
+  .hero__frame {
+    display: grid;
+    gap: 16px;
+    max-width: 1440px;
+    margin-inline: auto;
+    min-height: calc(100svh - 32px);
+  }
+
+  .hero__chat {
+    min-width: 0;
+    display: grid;
+    height: 600px;
+  }
+
+  @media (min-width: 1000px) {
+    .hero__frame {
+      grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+    }
+
+    .hero__chat {
+      height: calc(100svh - 32px);
+      max-height: 860px;
+    }
+  }
+
+  @media (max-width: 999px) {
+    .hero__chat {
+      order: 2;
+      height: auto;
+    }
+
+    /* phones: the chat grows with its content, no scroll-inside-a-scroll */
+    .hero__chat :global(.chat__log) {
+      overflow: visible;
+    }
+  }
+
+  .sheet {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-width: 0;
+    border-radius: 28px;
+    background: var(--card);
+    box-shadow: var(--shadow-lift);
+    overflow: hidden;
+  }
+
+  .sheet__note {
+    justify-self: end;
+    padding: 18px 24px 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-align: right;
+    max-width: 32ch;
+  }
+
+  .sheet__story {
+    position: relative;
+    align-self: center;
+    display: grid;
+    justify-items: start;
+    gap: 22px;
+    padding: 48px clamp(20px, 6vw, 88px) 40px;
+    max-width: 860px;
+  }
+
+  .story {
+    font-size: clamp(1.25rem, 0.95rem + 1.1vw, 1.75rem);
+    line-height: 1.45;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .story b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .story s {
+    text-decoration-thickness: 2px;
+  }
+
+  .name {
+    padding: 0 8px;
+    border-radius: 8px;
+    background: var(--name-bg);
+    color: var(--ink);
+  }
+
+  .hl {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+    background-image: linear-gradient(var(--mark-soft), var(--mark-soft));
+    background-size: 100% 0.32em;
+    background-position: 0 92%;
+    background-repeat: no-repeat;
+    transition: background-size var(--dur-2) var(--ease-out);
+  }
+
+  .hl:hover,
+  .hl:focus-visible {
+    background-size: 100% 100%;
+  }
+
+  .hl--go {
+    color: var(--signal-text);
+    background-image: linear-gradient(var(--signal-soft), var(--signal-soft));
+  }
+
+  .sticker {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 0 3px var(--card), var(--shadow);
+    transition: transform var(--dur-2) var(--ease-spring);
+  }
+
+  .sticker img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sticker--portrait {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    transform: rotate(-6deg);
+    margin-bottom: -6px;
+  }
+
+  .sticker--portrait:hover {
+    transform: rotate(4deg) scale(1.06);
+  }
+
+  .sticker--baby {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 0;
+    margin: -8px 2px 0;
+    cursor: zoom-in;
+    transform: rotate(5deg);
+  }
+
+  .sticker--baby:hover {
+    transform: rotate(-3deg) scale(1.12);
+  }
+
+  .sticker--baby.is-open {
+    z-index: 30;
+    transform: rotate(-2deg) scale(4.2);
+    cursor: zoom-out;
+  }
+
+  .ticker {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px 12px 24px;
+    background: var(--mark);
+    color: var(--mark-ink);
+  }
+
+  .ticker__label {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .ticker__viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .ticker__track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 600;
+    white-space: nowrap;
+    animation: ticker 28s linear infinite;
+  }
+
+  .ticker__track li {
+    display: inline-flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .ticker__track li::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: currentColor;
+    transform: rotate(45deg);
+    opacity: 0.5;
+  }
+
+  .ticker:hover .ticker__track,
+  .ticker.is-paused .ticker__track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker {
+    to {
+      transform: translateX(calc(-50% - 20px));
+    }
+  }
+
+  .ticker__pause {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--mark-ink);
+    background: transparent;
+    color: var(--mark-ink);
+    cursor: pointer;
+    transition: transform var(--dur-1) var(--ease-out), background-color var(--dur-1) linear;
+  }
+
+  .ticker__pause:hover {
+    background: var(--card);
+  }
+
+  .ticker__pause:active {
+    transform: scale(0.92);
+  }
+
+  .ticker__pause svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ticker__icon-play,
+  .ticker.is-paused .ticker__icon-pause {
+    display: none;
+  }
+
+  .ticker.is-paused .ticker__icon-play {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+      row-gap: 6px;
+    }
+
+    .ticker__dup,
+    .ticker__pause {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ticker {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .ticker__label {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const ticker = document.querySelector<HTMLElement>("[data-ticker]:not([data-wired])");
+    if (ticker) {
+      ticker.dataset.wired = "1";
+      const btn = ticker.querySelector<HTMLButtonElement>("[data-ticker-toggle]")!;
+      btn.addEventListener("click", () => {
+        const paused = ticker.classList.toggle("is-paused");
+        btn.setAttribute("aria-pressed", String(paused));
+        btn.setAttribute("aria-label", paused ? "Play the list" : "Pause the list");
+      });
+    }
+
+    document.querySelectorAll<HTMLButtonElement>("[data-peek]:not([data-wired])").forEach((btn) => {
+      btn.dataset.wired = "1";
+      btn.addEventListener("click", () => btn.classList.toggle("is-open"));
+      btn.addEventListener("blur", () => btn.classList.remove("is-open"));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") btn.classList.remove("is-open");
+      });
+    });
+  });
+</script>

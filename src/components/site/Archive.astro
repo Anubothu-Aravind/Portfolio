@@ -1,0 +1,253 @@
+---
+import { projects, groupOf, groupsInUse, GROUP_LABEL, STATUS_LABEL } from "@/lib/projects";
+
+const groups = groupsInUse();
+const counts = Object.fromEntries(groups.map((g) => [g, projects.filter((p) => groupOf(p) === g).length]));
+---
+
+<section id="archive" class="section container" aria-labelledby="archive-title">
+  <div class="section-head">
+    <h2 id="archive-title" data-words>Everything I've built</h2>
+    <p data-reveal>All {projects.length} projects, from coursework to client apps. Filter by where they came from.</p>
+  </div>
+
+  <div class="filters" role="group" aria-label="Filter projects" data-filters hidden>
+    <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">
+      All <span class="filter__n">{projects.length}</span>
+    </button>
+    {
+      groups.map((g) => (
+        <button type="button" class="filter" data-filter={g} aria-pressed="false">
+          {GROUP_LABEL[g]} <span class="filter__n">{counts[g]}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="table-wrap">
+    <table class="archive" data-archive>
+      <thead>
+        <tr>
+          <th scope="col">Project</th>
+          <th scope="col" class="col-type">Type</th>
+          <th scope="col" class="col-stack">Built with</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          projects.map((p) => (
+            <tr data-group={groupOf(p)} data-reveal style={`view-transition-name: row-${p.id}`}>
+              <td>
+                <a class="archive__name" href={`/projects/${p.id}`}>
+                  {p.name}
+                  {p.image && (
+                    <span class="archive__peek" aria-hidden="true">
+                      <img src={p.image} alt="" width="320" height="200" loading="lazy" />
+                    </span>
+                  )}
+                </a>
+                <span class="archive__tag">{p.tagline}</span>
+              </td>
+              <td class="col-type">{p.category}</td>
+              <td class="col-stack">{p.stack.length ? p.stack.slice(0, 3).join(", ") : "Not documented yet"}</td>
+              <td>
+                <span class={`status status--${p.status}`}>{STATUS_LABEL[p.status]}</span>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .filters {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .filter {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: transparent;
+    font-size: var(--step--1);
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--dur-2) linear, background-color var(--dur-2) var(--ease-out), border-color var(--dur-1) linear, transform var(--dur-1) var(--ease-out);
+  }
+
+  .filter:hover {
+    border-color: var(--ink);
+  }
+
+  .filter:active {
+    transform: scale(0.95);
+  }
+
+  .filter.is-active {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .filter__n {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .archive {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  .archive th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .archive td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    color: var(--ink-2);
+  }
+
+  .archive tbody tr {
+    transition: background-color var(--dur-1) linear;
+  }
+
+  .archive tbody tr:hover {
+    background: var(--card);
+  }
+
+  .archive tr[hidden] {
+    display: none;
+  }
+
+  .archive__name {
+    display: inline-block;
+    font-size: var(--step-0);
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    background-image: linear-gradient(var(--mark-soft), var(--mark-soft));
+    background-size: 0% 40%;
+    background-position: 0 88%;
+    background-repeat: no-repeat;
+    transition: background-size var(--dur-2) var(--ease-out);
+  }
+
+  .archive tr:hover .archive__name,
+  .archive__name:focus-visible {
+    background-size: 100% 40%;
+  }
+
+  .archive__name {
+    position: relative;
+  }
+
+  .archive__peek {
+    position: absolute;
+    left: calc(100% + 16px);
+    top: 50%;
+    z-index: 10;
+    width: 240px;
+    padding: 5px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lift);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-6px, -50%) rotate(-3deg) scale(0.92);
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-spring);
+  }
+
+  .archive__peek img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .archive tr:hover .archive__peek,
+  .archive__name:focus-visible .archive__peek {
+    opacity: 1;
+    transform: translate(0, -50%) rotate(-3deg) scale(1);
+  }
+
+  @media (hover: none) {
+    .archive__peek {
+      display: none;
+    }
+  }
+
+  .archive__tag {
+    display: block;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 720px) {
+    .col-type,
+    .col-stack {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const wire = () => {
+    const bar = document.querySelector<HTMLElement>("[data-filters]:not([data-wired])");
+    const table = document.querySelector<HTMLTableElement>("[data-archive]");
+    if (!bar || !table) return;
+    bar.dataset.wired = "1";
+    bar.hidden = false;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+    const rows = [...table.querySelectorAll<HTMLTableRowElement>("tbody tr")];
+
+    const apply = (value: string) => {
+      rows.forEach((r) => {
+        r.hidden = value !== "all" && r.dataset.group !== value;
+      });
+    };
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b) => {
+          b.classList.toggle("is-active", b === btn);
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        const value = btn.dataset.filter!;
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+        if (doc.startViewTransition && !reduced) doc.startViewTransition(() => apply(value));
+        else apply(value);
+      });
+    });
+
+  };
+
+  document.addEventListener("astro:page-load", wire);
+</script>

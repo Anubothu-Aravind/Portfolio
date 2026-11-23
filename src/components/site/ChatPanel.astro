@@ -1,0 +1,550 @@
+---
+import { personal } from "@/data/portfolio";
+
+const replies = [
+  {
+    id: "hardest",
+    ask: "Hardest thing you've built?",
+    answer: [
+      "The logistics system from my M.Tech. Five shortest-path algorithms, four vehicle-routing solvers, and it re-plans when a road closes.",
+    ],
+    link: { href: "/projects/logistics-optimizer", label: "Open the case study" },
+  },
+  {
+    id: "clients",
+    ask: "Who have you built for?",
+    answer: [
+      "A football club that still runs its players and tournaments on my CRM, a talent-scouting platform, a vendor-finance dashboard, and Thoughtiv, where I interned.",
+    ],
+    link: { href: "/#work", label: "See client work" },
+  },
+  {
+    id: "open",
+    ask: "Are you open to work?",
+    answer: ["Yes. Full-stack, backend and AI roles, and internships alongside my M.Tech."],
+    link: { href: `mailto:${personal.email}`, label: "Email me" },
+  },
+  {
+    id: "where",
+    ask: "Where are you based?",
+    answer: ["Vijayawada, Andhra Pradesh, India. It's {time} here right now."],
+  },
+  {
+    id: "terminal",
+    ask: "Where did the terminal go?",
+    answer: ["It still lives on its own page, commands and all."],
+    link: { href: "/terminal", label: "Open the terminal" },
+  },
+];
+---
+
+<aside class="chat" aria-label="Quick questions" data-chat>
+  <header class="chat__head">
+    <img class="chat__avatar" src="/assets/images/personal/aravind.jpg" alt="" width="40" height="40" />
+    <div>
+      <p class="chat__name">Aravind Anubothu</p>
+      <p class="chat__sub">Open to work</p>
+    </div>
+  </header>
+
+  <ol class="chat__log scroll-quiet" aria-live="polite" data-chat-log data-lenis-prevent>
+    <li class="msg msg--them" data-seq="0">
+      <p>hey, what do you build?</p>
+    </li>
+    <li class="msg msg--me" data-seq="1">
+      <p>Full-stack apps with AI inside them, and the backends that hold them up.</p>
+    </li>
+    <li class="msg msg--me" data-seq="2">
+      <p>One of them runs a <span class="mark">football club every day</span>. Another one is live for football scouts.</p>
+    </li>
+    <li class="msg msg--them" data-seq="3">
+      <p>nice. got a resume?</p>
+    </li>
+    <li class="msg msg--me msg--file" data-seq="4">
+      <a class="file" href="/resume.pdf" download="Anubothu_Aravind_Resume.pdf">
+        <span class="file__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"
+            ><path d="M7 3h7l5 5v13H7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"
+            ></path><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"
+            ></path></svg
+          >
+        </span>
+        <span class="file__meta">
+          <span class="file__name">Anubothu_Aravind_Resume.pdf</span>
+          <span class="file__size">2 pages, 150 KB</span>
+        </span>
+        <span class="file__get" aria-hidden="true">
+          <svg viewBox="0 0 24 24"
+            ><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"></path></svg
+          >
+        </span>
+      </a>
+    </li>
+    <li class="msg msg--me" data-seq="5">
+      <p>or email me</p>
+      <div class="email">
+        <a class="email__addr" href={`mailto:${personal.email}`}>{personal.email}</a>
+        <button class="email__copy" type="button" data-copy={personal.email} aria-label="Copy email address">
+          <span class="email__label" data-label-idle>Copy</span>
+          <span class="email__label email__label--done" data-label-done aria-hidden="true">Copied</span>
+        </button>
+      </div>
+    </li>
+  </ol>
+
+  <div class="chat__composer" data-chat-composer hidden>
+    <p class="chat__prompt">Ask me something</p>
+    <div class="chips" role="group" aria-label="Suggested questions">
+      {
+        replies.map((r) => (
+          <button class="chip" type="button" data-ask={r.id}>
+            {r.ask}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    replies.map((r) => (
+      <template data-answer={r.id}>
+        {r.answer.map((line) => (
+          <li class="msg msg--me">
+            <p>{line}</p>
+            {r.link && (
+              <a class="msg__link" href={r.link.href}>
+                {r.link.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </template>
+    ))
+  }
+</aside>
+
+<style is:global>
+  .chat {
+    display: flex;
+    flex-direction: column;
+    background: color-mix(in srgb, var(--card) 78%, transparent);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .chat__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .chat__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .chat__name {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .chat__sub {
+    font-size: var(--step--1);
+    color: var(--ok);
+  }
+
+  .chat__log {
+    list-style: none;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    flex: 1 1 auto;
+    min-height: 0;
+    scroll-behavior: smooth;
+  }
+
+  .msg {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    transform-origin: bottom left;
+  }
+
+  .msg--them {
+    align-self: flex-end;
+    background: var(--bubble-me);
+    color: var(--bubble-me-ink);
+    border-bottom-right-radius: 6px;
+    transform-origin: bottom right;
+  }
+
+  .msg--me {
+    align-self: flex-start;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 6px;
+  }
+
+  .msg--file {
+    padding: 6px;
+  }
+
+  .msg__link {
+    display: inline-block;
+    margin-top: 6px;
+    font-weight: 600;
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+
+  .msg.is-new {
+    animation: bubble var(--dur-3) var(--ease-spring) both;
+  }
+
+  .js .chat[data-intro="pending"] .msg[data-seq] {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+
+  .js .chat .msg[data-seq].is-shown {
+    opacity: 1;
+    transform: none;
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-3) var(--ease-spring);
+  }
+
+  @keyframes bubble {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .typing {
+    align-self: flex-start;
+    display: inline-flex;
+    gap: 4px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    border-bottom-left-radius: 6px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+
+  .typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: blink 1s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .typing span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes blink {
+    0%,
+    80%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out),
+      border-color var(--dur-1) linear;
+  }
+
+  .file:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--ink);
+  }
+
+  .file:active {
+    transform: scale(0.97);
+  }
+
+  .file__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--mark);
+    color: var(--mark-ink);
+  }
+
+  .file__icon svg,
+  .file__get svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .file__meta {
+    display: grid;
+    min-width: 0;
+  }
+
+  .file__name {
+    font-size: var(--step--1);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file__size {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .file__get {
+    margin-left: auto;
+    color: var(--muted);
+    transition: transform var(--dur-2) var(--ease-out), color var(--dur-1) linear;
+  }
+
+  .file:hover .file__get {
+    transform: translateY(2px);
+    color: var(--ink);
+  }
+
+  .email {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .email__addr {
+    display: inline-block;
+    padding-block: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ink);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  .email__copy {
+    position: relative;
+    display: inline-grid;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--card);
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1) linear,
+      background-color var(--dur-1) linear;
+  }
+
+  .email__copy:hover {
+    border-color: var(--ink);
+  }
+
+  .email__copy.is-done {
+    background: var(--mark);
+    border-color: var(--mark);
+    color: var(--mark-ink);
+  }
+
+  .email__copy:active {
+    transform: scale(0.94);
+  }
+
+
+  .chat__composer {
+    border-top: 1px solid var(--line);
+    padding: 12px 16px 16px;
+    background: color-mix(in srgb, var(--card) 70%, transparent);
+  }
+
+  .chat__prompt {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .chip {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1) linear,
+      background-color var(--dur-1) linear, opacity var(--dur-2) linear;
+  }
+
+  .chip:hover {
+    border-color: var(--ink);
+    background: var(--card);
+  }
+
+  .chip:active {
+    transform: scale(0.95);
+  }
+
+  .chip[disabled] {
+    opacity: 0.4;
+    cursor: default;
+    transform: none;
+  }
+</style>
+
+<script>
+  const TYPE_MS = 650;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const typingBubble = () => {
+    const li = document.createElement("li");
+    li.className = "typing";
+    li.setAttribute("aria-hidden", "true");
+    li.innerHTML = "<span></span><span></span><span></span>";
+    return li;
+  };
+
+  const istTime = () =>
+    new Intl.DateTimeFormat("en-IN", { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" }).format(
+      new Date()
+    );
+
+  const scrollToEnd = (log: HTMLElement) => {
+    if (log.scrollHeight > log.clientHeight + 4) log.scrollTo({ top: log.scrollHeight, behavior: reduced() ? "auto" : "smooth" });
+  };
+
+  const playIntro = async (chat: HTMLElement, log: HTMLElement) => {
+    const msgs = [...log.querySelectorAll<HTMLElement>(".msg[data-seq]")];
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem("chat-intro") === "1";
+    } catch {}
+    if (seen || reduced()) {
+      msgs.forEach((m) => m.classList.add("is-shown"));
+      chat.dataset.intro = "done";
+      return;
+    }
+    chat.dataset.intro = "pending";
+    for (const m of msgs) {
+      const mine = m.classList.contains("msg--me");
+      if (mine) {
+        const t = typingBubble();
+        m.before(t);
+        await sleep(TYPE_MS);
+        t.remove();
+      } else {
+        await sleep(260);
+      }
+      m.classList.add("is-shown");
+      scrollToEnd(log);
+    }
+    chat.dataset.intro = "done";
+    try {
+      sessionStorage.setItem("chat-intro", "1");
+    } catch {}
+  };
+
+  const answer = async (chat: HTMLElement, log: HTMLElement, id: string, label: string) => {
+    const q = document.createElement("li");
+    q.className = "msg msg--them is-new";
+    q.innerHTML = "<p></p>";
+    q.querySelector("p")!.textContent = label;
+    log.append(q);
+    scrollToEnd(log);
+
+    const tpl = chat.querySelector<HTMLTemplateElement>(`template[data-answer="${id}"]`);
+    if (!tpl) return;
+    const nodes = [...tpl.content.querySelectorAll("li")];
+    for (const n of nodes) {
+      if (!reduced()) {
+        const t = typingBubble();
+        log.append(t);
+        scrollToEnd(log);
+        await sleep(TYPE_MS);
+        t.remove();
+      }
+      const li = n.cloneNode(true) as HTMLElement;
+      li.classList.add("is-new");
+      li.querySelectorAll("p").forEach((p) => {
+        p.textContent = (p.textContent ?? "").replace("{time}", istTime());
+      });
+      log.append(li);
+      scrollToEnd(log);
+    }
+  };
+
+  const wire = () => {
+    const chat = document.querySelector<HTMLElement>("[data-chat]:not([data-wired])");
+    if (!chat) return;
+    chat.dataset.wired = "1";
+    const log = chat.querySelector<HTMLElement>("[data-chat-log]")!;
+    const composer = chat.querySelector<HTMLElement>("[data-chat-composer]")!;
+    composer.hidden = false;
+
+    let busy = false;
+    chat.querySelectorAll<HTMLButtonElement>("[data-ask]").forEach((chip) => {
+      chip.addEventListener("click", async () => {
+        if (busy) return;
+        busy = true;
+        chip.disabled = true;
+        await answer(chat, log, chip.dataset.ask!, chip.textContent!.trim());
+        busy = false;
+      });
+    });
+
+    playIntro(chat, log);
+  };
+
+  document.addEventListener("astro:page-load", wire);
+</script>

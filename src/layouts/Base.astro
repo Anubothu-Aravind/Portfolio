@@ -1,0 +1,106 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@/styles/global.css";
+import Dock from "@/components/site/Dock.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  bare?: boolean;
+}
+
+const { title, description, bare = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/assets/images/personal/aravind.jpg", Astro.site)} />
+    <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1917" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700;800&display=swap"
+    />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("motion-pending");
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") d.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {!bare && <Dock />}
+    <main id="main">
+      <slot />
+    </main>
+    <script>
+      import { smoothScroll, resetScroll, heroMotion, reveals, tilt } from "@/lib/motion";
+      import { initGate } from "@/lib/gate";
+      const copy = async (btn: HTMLButtonElement) => {
+        const text = btn.dataset.copy ?? "";
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.append(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        const idle = btn.getAttribute("aria-label") ?? "";
+        btn.classList.add("is-done");
+        btn.setAttribute("aria-label", "Email address copied");
+        window.setTimeout(() => {
+          btn.classList.remove("is-done");
+          btn.setAttribute("aria-label", idle);
+        }, 1800);
+      };
+      const wireCopy = () => {
+        document.querySelectorAll<HTMLButtonElement>("[data-copy]:not([data-wired])").forEach((btn) => {
+          btn.dataset.wired = "1";
+          btn.addEventListener("click", () => copy(btn));
+        });
+      };
+      document.addEventListener("astro:page-load", () => {
+        const root = document.documentElement;
+        root.classList.add("js", "motion-on");
+        smoothScroll();
+        heroMotion();
+        initGate();
+        reveals();
+        tilt(".pcard, .algo, .pager__link, .job__card", 4);
+        wireCopy();
+      });
+      document.addEventListener("astro:after-swap", resetScroll);
+      document.addEventListener("astro:after-swap", () => {
+        try {
+          const t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        } catch {}
+      });
+    </script>
+  </body>
+</html>

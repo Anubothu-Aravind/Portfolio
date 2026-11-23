@@ -1,0 +1,1001 @@
+---
+import { certifications, education, currentStudy, leadership } from "@/data/portfolio";
+
+type Photo = { src: string; alt: string };
+type Period = { id: string; from: string; years: number; title: string; caption: string; photos: Photo[] };
+
+const p = (file: string, alt: string): Photo => ({ src: `/assets/images/life/${file}`, alt });
+
+// Each period shows only its own photos. The last one is active by default.
+const periods: Period[] = [
+  {
+    id: "start",
+    from: "the start",
+    years: 1,
+    title: "Tenali",
+    caption: "Where it all started.",
+    photos: [p("baby.webp", "Aravind as a baby with family"), p("little-me.webp", "Aravind as a toddler between two other children")],
+  },
+  {
+    id: "btech",
+    from: "2022",
+    years: 2,
+    title: "B.Tech, KL University",
+    caption: `AI and Data Science, ${education.cgpa.replace(" / 10", "")} CGPA.`,
+    photos: [
+      p("blue-wall-smile.webp", "Aravind smiling in a KL University classroom"),
+      p("demo-with-team.webp", "Aravind showing a build on a laptop to two classmates"),
+    ],
+  },
+  {
+    id: "club",
+    from: "2024",
+    years: 1,
+    title: "Intelligentsia Club",
+    caption: `${leadership.role}. AI and backend workshops, hackathon mentoring.`,
+    photos: [
+      p("intelligentsia-kickstart.webp", "Aravind speaking at the Kick Start to Intelligentsia event"),
+      p("intelligentsia-team.webp", "The Intelligentsia Club team at their stall"),
+      p("podium-talk.webp", "Aravind speaking at a podium"),
+      p("presenting-mic.webp", "Aravind presenting with a microphone and laptop"),
+    ],
+  },
+  {
+    id: "work",
+    from: "2025",
+    years: 1,
+    title: "Thoughtiv, then freelance",
+    caption: "Backend and AI intern on HonestAI, then full-stack builds for clients.",
+    photos: [p("at-the-laptop.webp", "Aravind typing at a laptop"), p("portrait-night.webp", "Portrait of Aravind at night")],
+  },
+];
+const endLabel = `2026, ${currentStudy.degree}`;
+
+const certs = [...certifications].sort((a, b) => b.date.localeCompare(a.date));
+const data = JSON.stringify(periods);
+---
+
+<section id="story" class="section tl" aria-labelledby="story-title">
+  <div class="container">
+    <h2 id="story-title" class="tl__title" data-words>
+      <span class="tl__accent">how i got here</span>, one chapter at a time.<span class="tl__hint"> point at a year.</span>
+    </h2>
+
+    <!-- Interactive board (desktop). Built by the script from the data below. -->
+    <div class="tlb" data-tlb hidden>
+      <div class="tlb__media" aria-hidden="true" data-tlb-media></div>
+      <svg class="tlb__svg" aria-hidden="true" data-tlb-svg><path data-tlb-path></path></svg>
+      <ol class="tlb__years" aria-hidden="true" data-tlb-years></ol>
+      <div class="tlb__heads" aria-hidden="true" data-tlb-heads></div>
+      <div class="tlb__zones" data-tlb-zones></div>
+    </div>
+
+    <!-- Phones: pick a chapter, swipe its photos -->
+    <div class="tlm" data-tlm hidden>
+      <div class="tlm__chips scroll-none" role="tablist" aria-label="Chapters" data-tlm-chips></div>
+      <p class="tlm__caption" aria-live="polite" data-tlm-caption></p>
+      <div class="tlm__strip scroll-none" data-tlm-strip></div>
+    </div>
+
+    <!-- Without JavaScript: every chapter, every photo -->
+    <ol class="tlf" data-tlf>
+      {
+        periods.map((period) => (
+          <li class="tlf__item">
+            <p class="tlf__when">{period.from}</p>
+            <h3 class="tlf__title">{period.title}</h3>
+            <p class="tlf__caption">{period.caption}</p>
+            <div class="tlf__photos">
+              {period.photos.map((ph) => (
+                <img src={ph.src} alt={ph.alt} loading="lazy" width="200" height="200" />
+              ))}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <script type="application/json" data-tl-data set:html={data} />
+    <script type="application/json" data-tl-end set:html={JSON.stringify(endLabel)} />
+
+    <ol class="facts-list">
+      <li data-reveal>
+        <strong>{currentStudy.duration}</strong>
+        <span>{currentStudy.degree} in {currentStudy.field}, {currentStudy.institution}</span>
+      </li>
+      <li data-reveal>
+        <strong>{education.duration}</strong>
+        <span>B.Tech in {education.field}, CGPA {education.cgpa}</span>
+      </li>
+      <li data-reveal>
+        <strong>Nov 2025 to Mar 2026</strong>
+        <span>Freelance full-stack and AI developer</span>
+      </li>
+      <li data-reveal>
+        <strong>Aug to Nov 2025</strong>
+        <span>Backend and AI engineering intern, Thoughtiv (HonestAI)</span>
+      </li>
+      <li data-reveal>
+        <strong>{leadership.role}</strong>
+        <span>{leadership.org}: AI and backend workshops, hackathon mentoring</span>
+      </li>
+    </ol>
+
+    <div class="certs">
+      <h3 class="certs__title">certified in</h3>
+      <ul class="certs__list">
+        {
+          certs.map((c) => (
+            <li data-reveal>
+              <a class="cert" href={c.fallbackUrl} target="_blank" rel="noopener noreferrer">
+                {c.title}
+                <span class="cert__peek" aria-hidden="true">
+                  <img src={c.localUrl} alt="" loading="lazy" width="240" height="170" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tl__title {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--muted);
+    max-width: 40ch;
+    line-height: 1.3;
+  }
+
+  .tl__accent {
+    color: var(--signal-text);
+  }
+
+  /* ---------- desktop board ---------- */
+  .tlb {
+    position: relative;
+    height: 680px;
+    margin-top: 24px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .tlb__media,
+  .tlb__heads,
+  .tlb__zones,
+  .tlb__years {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tlb__media,
+  .tlb__heads,
+  .tlb__years {
+    pointer-events: none;
+  }
+
+  .tlb__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    color: var(--ink);
+    pointer-events: none;
+  }
+
+  .tlb__svg path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .tlb__svg circle {
+    fill: currentColor;
+  }
+
+  :global(.tlb__blob) {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    translate: -50% -50%;
+    opacity: 0;
+    scale: 0.7;
+    animation: blob-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  :global(.tlb__blob img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(.tlb__blob.is-leaving) {
+    animation: blob-out 0.18s ease-in both;
+  }
+
+  @keyframes blob-in {
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes blob-out {
+    from {
+      opacity: 1;
+      scale: 1;
+    }
+    to {
+      opacity: 0;
+      scale: 0.85;
+    }
+  }
+
+  :global(.tlb__years li) {
+    position: absolute;
+    translate: -50% 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  :global(.tlb__head) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  :global(.tlb__head.is-up) {
+    transition: transform 0.5s cubic-bezier(0.3, 1.15, 0.5, 1);
+  }
+
+  :global(.tlb__head h3) {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: var(--ink);
+    transform-origin: 50% 100%;
+    transition: scale 0.4s cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
+
+  :global(.tlb__head.is-up h3) {
+    scale: 1.5;
+    transform-origin: 0 100%;
+  }
+
+  :global(.tlb__head p) {
+    max-width: 260px;
+    margin-top: 14px;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+    opacity: 0;
+    translate: 0 6px;
+    transition: opacity 0.25s linear, translate 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  :global(.tlb__head.is-up p) {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 0.15s;
+  }
+
+  :global(.tlb__head:not(.is-up) p) {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  :global(.tlb__zone) {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  :global(.tlb__zone:focus-visible) {
+    outline: 2px solid var(--signal);
+    outline-offset: -2px;
+    border-radius: 16px;
+  }
+
+  /* ---------- phone chapters ---------- */
+  .tlm {
+    margin-top: 20px;
+  }
+
+  .tlm__chips {
+    display: flex;
+    gap: 8px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 4px var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+
+  :global(.tlm__chip) {
+    flex: 0 0 auto;
+    display: grid;
+    gap: 0;
+    min-height: 48px;
+    padding: 6px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    text-align: left;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: background-color 0.2s linear, color 0.2s linear, border-color 0.2s linear, transform 0.14s ease-out;
+  }
+
+  :global(.tlm__chip:active) {
+    transform: scale(0.96);
+  }
+
+  :global(.tlm__chip span) {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    opacity: 0.75;
+  }
+
+  :global(.tlm__chip strong) {
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  :global(.tlm__chip[aria-selected="true"]) {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .tlm__caption {
+    min-height: 3em;
+    margin-top: 14px;
+    color: var(--ink-2);
+  }
+
+  .tlm__strip {
+    display: flex;
+    gap: 14px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 12px var(--gutter) 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+  }
+
+  :global(.tlm__photo) {
+    flex: 0 0 72%;
+    aspect-ratio: 1;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    scroll-snap-align: center;
+    opacity: 0;
+    scale: 0.8;
+    animation: blob-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  :global(.tlm__photo img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---------- no-JS fallback ---------- */
+  .tlf {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 28px;
+  }
+
+  :global(.js) .tlf {
+    display: none;
+  }
+
+  .tlf__when {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .tlf__title {
+    font-size: var(--step-1);
+  }
+
+  .tlf__caption {
+    color: var(--ink-2);
+  }
+
+  .tlf__photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .tlf__photos img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.tlb__blob),
+    :global(.tlm__photo) {
+      animation: none;
+      opacity: 1;
+      scale: 1;
+    }
+
+    :global(.tlb__head),
+    :global(.tlb__head h3),
+    :global(.tlb__head p) {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .tl__hint {
+      display: none;
+    }
+  }
+
+  /* ---------- facts + certs ---------- */
+  .facts-list {
+    list-style: none;
+    margin: 64px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .facts-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .facts-list strong {
+    font-weight: 600;
+  }
+
+  .facts-list span {
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 860px) {
+    .facts-list li {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
+  }
+
+  .certs {
+    margin-top: 40px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .certs__title {
+    font-size: var(--step-1);
+  }
+
+  .certs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cert {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color var(--dur-1) linear, transform var(--dur-1) var(--ease-out);
+  }
+
+  .cert:hover {
+    border-color: var(--ink);
+  }
+
+  .cert:active {
+    transform: scale(0.96);
+  }
+
+  .cert__peek {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    z-index: 10;
+    width: 220px;
+    padding: 6px;
+    border-radius: var(--r-md);
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lift);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px) rotate(-2deg) scale(0.94);
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-spring);
+  }
+
+  .cert__peek img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .cert:hover .cert__peek,
+  .cert:focus-visible .cert__peek {
+    opacity: 1;
+    transform: translate(-50%, 0) rotate(-2deg) scale(1);
+  }
+
+  @media (hover: none) {
+    .cert__peek {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { animate, reducedMotion, speedFactor, EASE } from "@/lib/motion";
+
+  type Photo = { src: string; alt: string };
+  type Period = { id: string; from: string; years: number; title: string; caption: string; photos: Photo[] };
+  type Ease = [number, number, number, number];
+  const ease = (k: keyof typeof EASE) => EASE[k] as unknown as Ease;
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+  /* seeded random, so a layout is stable for a given seed */
+  const rng = (seed: number) => () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
+  /* ================= desktop board ================= */
+
+  const board = (root: HTMLElement, periods: Period[], endLabel: string) => {
+    const media = root.querySelector<HTMLElement>("[data-tlb-media]")!;
+    const svg = root.querySelector<SVGSVGElement>("[data-tlb-svg]")!;
+    const path = root.querySelector<SVGPathElement>("[data-tlb-path]")!;
+    const yearsEl = root.querySelector<HTMLElement>("[data-tlb-years]")!;
+    const headsEl = root.querySelector<HTMLElement>("[data-tlb-heads]")!;
+    const zonesEl = root.querySelector<HTMLElement>("[data-tlb-zones]")!;
+    const N = periods.length;
+    const last = N - 1;
+
+    // geometry, scaled to the board's width (reference: 1512px design width)
+    let G = { W: 1200, H: 680, left: 60, cw: 270, line: 616, amp: 134, reach: 270 };
+    const measure = () => {
+      const W = root.clientWidth;
+      const H = root.clientHeight;
+      const s = W / 1512;
+      const amp = Math.round(134 * clamp(s, 0.6, 1));
+      const cw = (W * 0.9) / N;
+      G = { W, H, left: W * 0.05, cw, line: Math.max(amp + 240, H - 64), amp, reach: Math.max(270 * s, cw * 0.85) };
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    };
+    const start = (i: number) => G.left + i * G.cw;
+    const centre = (i: number) => G.left + (i + 0.5) * G.cw;
+    const yAt = (x: number, c: number) => {
+      const d = Math.abs(x - c);
+      return d >= G.reach ? G.line : G.line - (G.amp * (1 + Math.cos((Math.PI * d) / G.reach))) / 2;
+    };
+
+    // one dot per year in each period, plus the end
+    const dotXs = () => {
+      const xs: number[] = [];
+      periods.forEach((p, i) => {
+        for (let k = 0; k < p.years; k++) xs.push(start(i) + (k / p.years) * G.cw);
+      });
+      xs.push(start(N));
+      return xs;
+    };
+    let dots: SVGCircleElement[] = [];
+    const buildDots = () => {
+      dots.forEach((d) => d.remove());
+      dots = dotXs().map(() => {
+        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("r", "3.2");
+        svg.append(c);
+        return c;
+      });
+    };
+
+    // years under the line
+    const buildYears = () => {
+      yearsEl.innerHTML = "";
+      [...periods.map((p) => p.from), endLabel].forEach((label, i) => {
+        const li = document.createElement("li");
+        li.textContent = label;
+        li.style.left = `${start(i)}px`;
+        li.style.top = `${G.line + 22}px`;
+        yearsEl.append(li);
+      });
+    };
+
+    // headings: small on the line, big on the bump when active
+    const heads = periods.map((p) => {
+      const el = document.createElement("div");
+      el.className = "tlb__head";
+      const h = document.createElement("h3");
+      h.textContent = p.title;
+      const cap = document.createElement("p");
+      cap.textContent = p.caption;
+      el.append(h, cap);
+      headsEl.append(el);
+      return el;
+    });
+
+    // full-height zones: hover, click or focus selects a period
+    const zones = periods.map((p, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "tlb__zone";
+      b.setAttribute("aria-label", `${p.from}: ${p.title}. ${p.caption}`);
+      b.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && select(i));
+      b.addEventListener("click", () => select(i));
+      b.addEventListener("focus", () => select(i));
+      zonesEl.append(b);
+      return b;
+    });
+    const placeZones = () =>
+      zones.forEach((z, i) => {
+        const l = i === 0 ? 0 : start(i);
+        const r = i === last ? G.W : start(i + 1);
+        z.style.left = `${l}px`;
+        z.style.width = `${r - l}px`;
+      });
+
+    // draw the line with its bump at x = c
+    let bump = 0;
+    let target = 0;
+    const draw = (c: number) => {
+      let d = "";
+      for (let x = 0; x <= G.W + 3; x += 3) d += `${x ? "L" : "M"}${x} ${yAt(x, c).toFixed(1)}`;
+      path.setAttribute("d", d);
+      const xs = dotXs();
+      dots.forEach((dot, i) => {
+        dot.setAttribute("cx", xs[i].toFixed(1));
+        dot.setAttribute("cy", yAt(xs[i], c).toFixed(1));
+      });
+    };
+
+    // the bump eases toward its target (critically damped, like the reference)
+    let raf = 0;
+    const glide = () => {
+      cancelAnimationFrame(raf);
+      let t0 = performance.now();
+      const step = (now: number) => {
+        const dt = Math.min((now - t0) / 1000, 0.05);
+        t0 = now;
+        bump += (target - bump) * (1 - Math.exp(-dt * 9));
+        const done = Math.abs(target - bump) < 0.2;
+        if (done) bump = target;
+        draw(bump);
+        if (!done) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    const placeHeads = () => {
+      heads.forEach((h, i) => {
+        const up = i === active;
+        h.classList.toggle("is-up", up);
+        const w = h.offsetWidth;
+        const hh = h.offsetHeight;
+        if (up) {
+          const x = clamp(centre(i) - 40, 8, G.W - Math.max(w * 1.5, 260) - 8);
+          h.style.transform = `translate(${x}px, ${G.line - G.amp - 16 - hh}px)`;
+        } else {
+          h.style.transform = `translate(${centre(i) - w / 2}px, ${G.line - 20 - hh}px)`;
+        }
+      });
+    };
+
+    // pack the active period's photos above the line, clear of the bump and the heading
+    const pack = (i: number, seed: number) => {
+      const count = periods[i].photos.length;
+      const c = centre(i);
+      const head = heads[i].getBoundingClientRect();
+      const box = root.getBoundingClientRect();
+      const hb = { l: head.left - box.left - 20, r: head.right - box.left + 40, t: head.top - box.top - 30 };
+      const ceil = (x0: number, x1: number) => Math.min(G.line - 70, yAt(clamp(c, x0, x1), c) - 28);
+      const r = (s: number) => s * 0.62;
+      const fits = (x: number, y: number, s: number, placed: { x: number; y: number; s: number }[]) => {
+        const a = s * 0.72;
+        if (x - a < 8 || x + a > G.W - 8 || y - a < 8 || y + a > ceil(x - a, x + a)) return false;
+        if (x + a > hb.l && x - a < hb.r && y + a > hb.t) return false;
+        return placed.every((o) => Math.hypot(o.x - x, o.y - y) > r(o.s) + r(s) + 10);
+      };
+      const room = (x: number, y: number, s: number, placed: { x: number; y: number; s: number }[]) => {
+        const a = s * 0.72;
+        let m = Math.min(x - a - 8, G.W - 8 - x - a, y - a - 8, ceil(x - a, x + a) - y - a);
+        placed.forEach((o) => (m = Math.min(m, Math.hypot(o.x - x, o.y - y) - r(o.s) - r(s))));
+        return m;
+      };
+      const tryPack = (size: number, rand: () => number) => {
+        const placed: { x: number; y: number; s: number }[] = [];
+        for (let k = 0; k < count; k++) {
+          const s = size * (0.86 + rand() * 0.28);
+          let best: { x: number; y: number; s: number } | null = null;
+          let bestRoom = Infinity;
+          for (let t = 0; t < 360; t++) {
+            const x = rand() * G.W;
+            const y = rand() * G.line;
+            if (!fits(x, y, s, placed)) continue;
+            const m = room(x, y, s, placed);
+            if (m < bestRoom) {
+              best = { x, y, s };
+              bestRoom = m;
+            }
+          }
+          if (!best) return null;
+          placed.push(best);
+        }
+        return placed;
+      };
+      // largest size that still packs (binary search)
+      let lo = 36;
+      let hi = Math.min(G.W * 0.42, G.line * 0.55, 300);
+      let layout = tryPack(lo, rng(seed));
+      for (let k = 0; k < 11 && hi - lo > 4; k++) {
+        const mid = (lo + hi) / 2;
+        const got = tryPack(mid, rng(seed + k * 7919));
+        if (got) {
+          layout = got;
+          lo = mid;
+        } else hi = mid;
+      }
+      const rand = rng(seed ^ 0x5bd1e995);
+      return (layout ?? []).map((spot, k) => ({ ...spot, photo: periods[i].photos[k], rot: (rand() - 0.5) * 28, delay: 180 + k * 70 + rand() * 60 }));
+    };
+
+    let active = last;
+    let shown = -1;
+    const showPhotos = (i: number, firstReveal = false) => {
+      if (i === shown) return;
+      shown = i;
+      media.querySelectorAll(".tlb__blob").forEach((b) => {
+        b.classList.add("is-leaving");
+        window.setTimeout(() => b.remove(), 200);
+      });
+      pack(i, Math.floor(Math.random() * 1e9)).forEach((spot) => {
+        const el = document.createElement("span");
+        el.className = "tlb__blob";
+        el.style.left = `${spot.x}px`;
+        el.style.top = `${spot.y}px`;
+        el.style.width = el.style.height = `${spot.s}px`;
+        el.style.rotate = `${spot.rot}deg`;
+        el.style.animationDelay = firstReveal ? "0ms" : `${spot.delay}ms`;
+        if (firstReveal) el.style.animationPlayState = "paused";
+        const img = document.createElement("img");
+        img.src = spot.photo.src;
+        img.alt = "";
+        img.draggable = false;
+        el.append(img);
+        media.append(el);
+      });
+    };
+
+    const select = (i: number) => {
+      if (i === active && shown === i) return;
+      active = i;
+      target = centre(i);
+      placeHeads();
+      if (reducedMotion()) {
+        bump = target;
+        draw(bump);
+      } else glide();
+      showPhotos(i);
+    };
+
+    const layout = () => {
+      measure();
+      buildDots();
+      buildYears();
+      placeZones();
+      bump = target = centre(active);
+      draw(bump);
+      placeHeads();
+    };
+
+    root.hidden = false;
+    layout();
+    showPhotos(active, true);
+
+    // leave the board (mouse out): fall back to the latest chapter, like the reference
+    root.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && select(last));
+
+    let firstObserve = true;
+    let lastW = root.clientWidth;
+    new ResizeObserver(() => {
+      if (firstObserve) {
+        firstObserve = false;
+        return;
+      }
+      if (Math.abs(root.clientWidth - lastW) < 2) return;
+      lastW = root.clientWidth;
+      layout();
+      shown = -1;
+      showPhotos(active);
+    }).observe(root);
+
+    // resting state until the intro plays: line undrawn, dots and labels hidden
+    if (!reducedMotion()) {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = `${len}`;
+      path.style.strokeDashoffset = `${len}`;
+      dots.forEach((d) => (d.style.opacity = "0"));
+      [...yearsEl.children, ...heads].forEach((l) => ((l as HTMLElement).style.opacity = "0"));
+    }
+
+    /* first reveal: line draws, dots ride in, labels rise, photos open (plays once) */
+    const intro = () => {
+      if (reducedMotion()) {
+        media.querySelectorAll<HTMLElement>(".tlb__blob").forEach((b) => (b.style.animationPlayState = "running"));
+        return;
+      }
+      const sp = speedFactor(root);
+      const t = (s: number) => s / sp;
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = `${len}`;
+      animate(path, { strokeDashoffset: [len, 0] }, { duration: t(1), ease: ease("draw"), delay: t(0.35) }).then(() => {
+        path.style.strokeDasharray = "";
+        path.style.strokeDashoffset = "";
+      });
+      const xs = dotXs();
+      const max = Math.max(...xs);
+      const dotStart = 1.25;
+      let dotsEnd = dotStart;
+      [...dots]
+        .map((d, i) => ({ d, x: xs[i] }))
+        .sort((a, b) => b.x - a.x)
+        .forEach(({ d, x }, k) => {
+          const dur = 0.5 + 0.75 * (x / max);
+          const delay = dotStart + k * 0.035;
+          dotsEnd = Math.max(dotsEnd, delay + dur);
+          d.style.opacity = "0";
+          animate(0, 1, {
+            duration: t(dur),
+            delay: t(delay),
+            ease: ease("slide"),
+            onUpdate: (p) => {
+              const cx = x * p;
+              d.style.opacity = "1";
+              d.setAttribute("cx", cx.toFixed(1));
+              d.setAttribute("cy", yAt(cx, bump).toFixed(1));
+            },
+          });
+        });
+      const labelStart = dotsEnd - 0.15;
+      const labels = [...yearsEl.children, ...heads] as HTMLElement[];
+      labels.forEach((l) => (l.style.opacity = "0"));
+      labels
+        .sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left)
+        .forEach((l, k) =>
+          animate(l, { opacity: [0, 1] }, { duration: t(0.55), ease: ease("settle"), delay: t(labelStart + k * 0.06) })
+        );
+      const photoStart = labelStart + 0.06 * labels.length + 0.2;
+      window.setTimeout(() => {
+        media.querySelectorAll<HTMLElement>(".tlb__blob").forEach((b, k) => {
+          b.style.animationDelay = `${180 + k * 70}ms`;
+          b.style.animationPlayState = "running";
+        });
+      }, t(photoStart) * 1000);
+    };
+
+    let played = false;
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((en) => {
+          const need = Math.min(en.boundingClientRect.height, window.innerHeight) * 0.5;
+          if (!played && en.isIntersecting && en.intersectionRect.height >= need) {
+            played = true;
+            io.disconnect();
+            intro();
+          }
+        }),
+      { threshold: Array.from({ length: 21 }, (_, i) => i / 20) }
+    );
+    io.observe(root);
+  };
+
+  /* ================= phones ================= */
+
+  const phone = (root: HTMLElement, periods: Period[]) => {
+    const chips = root.querySelector<HTMLElement>("[data-tlm-chips]")!;
+    const caption = root.querySelector<HTMLElement>("[data-tlm-caption]")!;
+    const strip = root.querySelector<HTMLElement>("[data-tlm-strip]")!;
+    const buttons = periods.map((p, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "tlm__chip";
+      b.setAttribute("role", "tab");
+      b.innerHTML = `<span></span><strong></strong>`;
+      b.querySelector("span")!.textContent = p.from;
+      b.querySelector("strong")!.textContent = p.title;
+      b.addEventListener("click", () => show(i));
+      chips.append(b);
+      return b;
+    });
+    const show = (i: number) => {
+      buttons.forEach((b, k) => {
+        b.setAttribute("aria-selected", String(k === i));
+        b.tabIndex = k === i ? 0 : -1;
+      });
+      const btn = buttons[i];
+      const want = btn.offsetLeft - (chips.clientWidth - btn.offsetWidth) / 2;
+      chips.scrollTo({ left: Math.max(0, want), behavior: reducedMotion() || !chips.dataset.ready ? "auto" : "smooth" });
+      chips.dataset.ready = "1";
+      caption.textContent = periods[i].caption;
+      strip.innerHTML = "";
+      strip.scrollLeft = 0;
+      periods[i].photos.forEach((ph, k) => {
+        const f = document.createElement("figure");
+        f.className = "tlm__photo";
+        f.style.animationDelay = `${80 + k * 70}ms`;
+        const img = document.createElement("img");
+        img.src = ph.src;
+        img.alt = ph.alt;
+        f.append(img);
+        strip.append(f);
+      });
+    };
+    root.hidden = false;
+    show(periods.length - 1);
+  };
+
+  const wire = () => {
+    const dataEl = document.querySelector<HTMLScriptElement>("[data-tl-data]");
+    const desk = document.querySelector<HTMLElement>("[data-tlb]:not([data-wired])");
+    const mob = document.querySelector<HTMLElement>("[data-tlm]:not([data-wired])");
+    if (!dataEl || !desk || !mob) return;
+    desk.dataset.wired = mob.dataset.wired = "1";
+    const periods = JSON.parse(dataEl.textContent ?? "[]") as Period[];
+    const endLabel = JSON.parse(document.querySelector("[data-tl-end]")?.textContent ?? '""') as string;
+    if (window.matchMedia("(max-width: 860px)").matches) phone(mob, periods);
+    else board(desk, periods, endLabel);
+  };
+
+  document.addEventListener("astro:page-load", wire);
+</script>

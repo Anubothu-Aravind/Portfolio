@@ -1,0 +1,550 @@
+---
+import Demo from "./Demo.astro";
+import { FLAGSHIPS, byId, STATUS_LABEL, type Project } from "@/lib/projects";
+
+// newest first: M.Tech work and 2026 client work lead
+const latest = ["logistics-optimizer", "pro-talent-connect", "pyodide-sudoku", "netscope", "graphshield", "football-club-crm"].map(byId);
+const apps = [
+  "pro-talent-connect",
+  "football-club-crm",
+  "ai-interview",
+  "docdistill",
+  "honestai",
+  "next-zen-store",
+  "vastrams",
+  "report-generator",
+].map(byId);
+const algos = FLAGSHIPS.map((f) => ({ ...f, project: byId(f.id) }));
+
+const short = (p: Project) => p.category.replace(/ – .*$/, "").replace("Course Project", "course project");
+---
+
+<section id="work" class="section container" aria-labelledby="work-title">
+  <div class="work-head">
+    <h2 id="work-title" class="sr-only">Work</h2>
+    <div class="tabs" role="tablist" aria-label="Work" data-tabs>
+      <button class="tab is-active" role="tab" id="tab-latest" aria-controls="panel-latest" aria-selected="true" type="button">latest</button>
+      <button class="tab" role="tab" id="tab-apps" aria-controls="panel-apps" aria-selected="false" tabindex="-1" type="button">apps and AI</button>
+      <button class="tab" role="tab" id="tab-algos" aria-controls="panel-algos" aria-selected="false" tabindex="-1" type="button">algorithms</button>
+    </div>
+    <p class="work-head__sub" data-words>Things people use, and the hard parts underneath.</p>
+  </div>
+
+  <div id="panel-latest" class="panel" role="tabpanel" aria-labelledby="tab-latest">
+    <ul class="grid grid--latest">
+      {
+        latest.map((p, i) => (
+          <li class={`cell ${i === 0 ? "cell--hero" : ""}`} data-reveal>
+            <a class="pcard" href={`/projects/${p.id}`} data-cursor>
+              <span class="pcard__media">
+                {p.image ? (
+                  <img src={p.image} alt={p.imageAlt ?? ""} width="1280" height="800" loading={i < 2 ? "eager" : "lazy"} />
+                ) : (
+                  <span class="pcard__ph" aria-hidden="true">{p.name}</span>
+                )}
+              </span>
+              <span class="pcard__body">
+                <span class="pcard__meta">
+                  <span class="mono">{p.index}</span>
+                  <span>{short(p)}</span>
+                  <span class={`status status--${p.status}`}>{STATUS_LABEL[p.status]}</span>
+                </span>
+                <h3 class="pcard__title" transition:name={`title-${p.id}`}>{p.name}</h3>
+                <span class="pcard__tag">{p.tagline}</span>
+                {i === 0 && <span class="pcard__impact">{p.impact}</span>}
+                <span class="pcard__chips">
+                  {p.stack.slice(0, i === 0 ? 6 : 4).map((s) => <span>{s}</span>)}
+                </span>
+                {p.live && <span class="pcard__live">Live site</span>}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div id="panel-apps" class="panel" role="tabpanel" aria-labelledby="tab-apps" data-initially-hidden>
+    <ul class="grid grid--apps">
+      {
+        apps.map((p) => (
+          <li class="cell" data-reveal>
+            <a class="pcard" href={`/projects/${p.id}`} data-cursor>
+              <span class="pcard__media">
+                {p.image ? (
+                  <img src={p.image} alt={p.imageAlt ?? ""} width="1280" height="800" loading="lazy" />
+                ) : (
+                  <span class="pcard__ph" aria-hidden="true">{p.name}</span>
+                )}
+              </span>
+              <span class="pcard__body">
+                <span class="pcard__meta">
+                  <span class="mono">{p.index}</span>
+                  <span>{short(p)}</span>
+                  <span class={`status status--${p.status}`}>{STATUS_LABEL[p.status]}</span>
+                </span>
+                <h3 class="pcard__title">{p.name}</h3>
+                <span class="pcard__tag">{p.tagline}</span>
+                <span class="pcard__chips">
+                  {p.stack.slice(0, 4).map((s) => <span>{s}</span>)}
+                </span>
+                {p.live && <span class="pcard__live">Live site</span>}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div id="panel-algos" class="panel" role="tabpanel" aria-labelledby="tab-algos" data-initially-hidden>
+    <ol class="algos">
+      {
+        algos.map(({ project, demo, hook }) => (
+          <li data-reveal>
+            <a class="algo" href={`/projects/${project.id}`} data-demo-host data-cursor>
+              <div class="algo__stage">
+                <Demo kind={demo} />
+                {project.image && (
+                  <span class="algo__shot">
+                    <img src={project.image} alt={project.imageAlt ?? ""} width="1280" height="800" loading="lazy" />
+                  </span>
+                )}
+              </div>
+              <div class="algo__body">
+                <h3 class="algo__name">{project.name}</h3>
+                <p class="algo__hook">{hook}</p>
+                <p class="pcard__chips">
+                  {project.stack.slice(0, 4).map((s) => <span>{s}</span>)}
+                </p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <span class="cursor-pill" aria-hidden="true" data-cursor-pill>open</span>
+</section>
+
+<style>
+  .work-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-bottom: 32px;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+  }
+
+  .tab {
+    position: relative;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    font-size: var(--step-3);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--muted);
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity var(--dur-2) linear, color var(--dur-2) linear, transform var(--dur-1) var(--ease-out);
+  }
+
+  .tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+
+  .tab:hover {
+    opacity: 0.85;
+  }
+
+  .tab:active {
+    transform: scale(0.97);
+  }
+
+  .tab.is-active {
+    color: var(--ink);
+    opacity: 1;
+  }
+
+  .tab.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .work-head__sub {
+    color: var(--muted);
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  @media (min-width: 760px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .cell--hero {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .grid--apps,
+    .grid--latest {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid--latest .cell:nth-child(2) {
+      grid-column: span 2;
+    }
+  }
+
+  .pcard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 14px;
+    height: 100%;
+    padding: 10px 10px 18px;
+    border-radius: var(--r-lg);
+    background: var(--card);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-1) linear;
+  }
+
+  .pcard:hover {
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  .pcard__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: calc(var(--r-lg) - 6px);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+
+  .pcard__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.9s var(--ease-out);
+  }
+
+  .pcard:hover .pcard__media img {
+    transform: scale(1.05);
+  }
+
+  .pcard__ph {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    text-align: center;
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 20% 30%, var(--mark-soft) 0 22%, transparent 23%),
+      radial-gradient(circle at 80% 75%, var(--name-bg) 0 18%, transparent 19%),
+      var(--paper-2);
+  }
+
+  .pcard__body {
+    display: grid;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .pcard__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .pcard__meta .status {
+    margin-left: auto;
+  }
+
+  .pcard__title {
+    font-size: var(--step-2);
+  }
+
+  .pcard__tag {
+    color: var(--ink-2);
+  }
+
+  .pcard__impact {
+    color: var(--muted);
+    font-size: var(--step--1);
+    max-width: 60ch;
+  }
+
+  .pcard__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0 0;
+  }
+
+  .pcard__chips span {
+    padding: 3px 10px;
+    border-radius: var(--r-pill);
+    background: var(--paper-2);
+    color: var(--ink-2);
+    font-size: 0.8125rem;
+  }
+
+  .pcard__live {
+    justify-self: start;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    background: var(--mark);
+    color: var(--mark-ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  @media (min-width: 1080px) {
+    .cell--hero .pcard {
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 32px;
+      padding: 12px;
+    }
+
+    .cell--hero .pcard__title {
+      font-size: var(--step-3);
+    }
+
+    .cell--hero .pcard__body {
+      gap: 12px;
+      padding: 12px 20px 12px 0;
+    }
+  }
+
+  .algos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  @media (min-width: 820px) {
+    .algos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+
+  .algo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    height: 100%;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+    background: var(--card);
+    overflow: hidden;
+    text-decoration: none;
+    transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-1) linear;
+  }
+
+  .algo:hover {
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+
+  .algo__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    padding: 24px;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+
+  .algo__stage :global(.demo--sudoku) {
+    max-width: 170px;
+  }
+
+  .algo__shot {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 34%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 3px solid var(--card);
+    box-shadow: var(--shadow-lift);
+    transform: rotate(4deg);
+    transform-origin: bottom right;
+    transition: transform 0.5s var(--ease-spring);
+  }
+
+  .algo__shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .algo:hover .algo__shot,
+  .algo:focus-visible .algo__shot {
+    transform: rotate(-1deg) scale(1.9);
+  }
+
+  .algo__body {
+    display: grid;
+    gap: 6px;
+    padding: 18px 22px 22px;
+  }
+
+  .algo__name {
+    font-size: var(--step-2);
+  }
+
+  .algo__hook {
+    color: var(--ink-2);
+  }
+
+  .cursor-pill {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 70;
+    padding: 8px 14px;
+    border-radius: var(--r-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: var(--step--1);
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.6;
+    transition: opacity 0.2s linear, scale 0.35s var(--ease-spring);
+  }
+
+  :global(.cursor-pill.is-on) {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .cursor-pill {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { staggerIn, animate, reducedMotion, finePointer } from "@/lib/motion";
+
+  const wireTabs = () => {
+    const list = document.querySelector<HTMLElement>("[data-tabs]:not([data-wired])");
+    if (!list) return;
+    list.dataset.wired = "1";
+    document.querySelectorAll<HTMLElement>("[data-initially-hidden]").forEach((p) => (p.hidden = true));
+    const tabs = [...list.querySelectorAll<HTMLButtonElement>("[role=tab]")];
+    const select = (tab: HTMLButtonElement) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute("aria-controls")!);
+        if (panel) panel.hidden = !on;
+      });
+      const panel = document.getElementById(tab.getAttribute("aria-controls")!);
+      if (!panel) return;
+      panel.querySelectorAll<HTMLElement>("[data-demo]").forEach((d) => {
+        d.classList.remove("is-playing");
+        void d.getBoundingClientRect();
+        d.classList.add("is-playing");
+      });
+      const items = panel.querySelectorAll<HTMLElement>(":scope > ul > li, :scope > ol > li");
+      items.forEach((el) => el.classList.add("is-in"));
+      staggerIn(items);
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(tab));
+      tab.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+        next.focus();
+        select(next);
+      });
+    });
+  };
+
+  // a small "open" pill that follows the pointer over project cards, on a spring
+  const wireCursor = () => {
+    const pill = document.querySelector<HTMLElement>("[data-cursor-pill]:not([data-wired])");
+    if (!pill || reducedMotion() || !finePointer()) return;
+    pill.dataset.wired = "1";
+    document.body.append(pill);
+    let shown = false;
+    const move = (e: PointerEvent) => {
+      const to = { x: e.clientX + 14, y: e.clientY + 14 };
+      if (!shown) {
+        animate(pill, to, { duration: 0 });
+        shown = true;
+      } else animate(pill, to, { type: "spring", stiffness: 520, damping: 38 });
+    };
+    document.querySelectorAll<HTMLElement>("[data-cursor]").forEach((card) => {
+      card.addEventListener("pointerenter", (e) => {
+        move(e);
+        pill.classList.add("is-on");
+      });
+      card.addEventListener("pointermove", move);
+      card.addEventListener("pointerleave", () => {
+        pill.classList.remove("is-on");
+        shown = false;
+      });
+    });
+    document.addEventListener("astro:before-swap", () => pill.remove(), { once: true });
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    wireTabs();
+    wireCursor();
+  });
+</script>

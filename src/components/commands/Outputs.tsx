@@ -193,7 +193,7 @@ export const WhoamiOutput = ({ onExecuteCmd }: OutputProps) => {
           </p>
           <p style={{ marginBottom: "0.75rem" }}>
             I specialize in architecting production-ready APIs, robust AI systems (using RAG pipelines and semantic search), and cloud-deployed services.
-            I have designed and implemented 30+ secure REST API endpoints, built scalable AI assistants like Contexta AI and DocDistill, and worked within Agile team environments.
+            I have designed and implemented 30+ secure REST API endpoints, built AI tools like DocDistill and an AI interview system, and worked within Agile team environments.
           </p>
           <p style={{ marginBottom: "0.75rem" }}>
             Currently, I am pursuing my Bachelor of Technology (B.Tech) in <strong style={{ color: "var(--t-text)" }}>Artificial Intelligence and Data Science</strong> at KL University, maintaining a CGPA of 9.6/10. I also serve as the Technical Lead at the Intelligentsia Club, coordinating workshops and mentoring peers.
@@ -218,7 +218,7 @@ export const SummaryOutput = () => {
         <li style={{ marginBottom: "6px" }}>📍 <strong>Focus:</strong> Backend systems (FastAPI/NodeJS), generative AI (LangChain/RAG), databases (PostgreSQL/MongoDB), and DevOps (Docker/AWS).</li>
         <li style={{ marginBottom: "6px" }}>📈 <strong>Academic Excellence:</strong> Pursuing B.Tech AI & Data Science (CGPA: 9.6/10).</li>
         <li style={{ marginBottom: "6px" }}>💼 <strong>Experience:</strong> Thoughtiv Internship (HonestAI project) + freelance execution delivering 5+ production products and 30+ secure endpoints.</li>
-        <li style={{ marginBottom: "6px" }}>🧠 <strong>Key Projects:</strong> Contexta AI (GenAI paper assistant), Pro Talent Connect (sports platform backend), DocDistill (voice-enabled RAG tool).</li>
+        <li style={{ marginBottom: "6px" }}>🧠 <strong>Key Projects:</strong> Intelligent Logistics (route optimization on a real road network), Football Club CRM (in use by a client), Sudoku Engine (Python in the browser via WebAssembly).</li>
       </ul>
     </div>
   );

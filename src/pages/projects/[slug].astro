@@ -1,0 +1,428 @@
+---
+import Base from "@/layouts/Base.astro";
+import Demo from "@/components/site/Demo.astro";
+import Contact from "@/components/site/Contact.astro";
+import { projects, demoFor, STATUS_LABEL, type Project } from "@/lib/projects";
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      prev: projects[(i - 1 + projects.length) % projects.length],
+      next: projects[(i + 1) % projects.length],
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  prev: Project;
+  next: Project;
+}
+
+const { project, prev, next } = Astro.props;
+const demo = demoFor(project.id);
+const description = `${project.name}: ${project.tagline}. ${project.impact}`;
+---
+
+<Base title={`${project.name}, Aravind Anubothu`} description={description}>
+  <article class="container case">
+    <a class="case__back" href="/#archive">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19 12H5m0 0 5-5m-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      All projects
+    </a>
+
+    <header class="case__head">
+      <h1 class="case__title" transition:name={`title-${project.id}`}>{project.name}</h1>
+      <p class="case__tagline" data-reveal>{project.tagline}</p>
+    </header>
+
+    {
+      demo && (
+        <div class="case__stage" data-demo-host data-reveal>
+          <Demo kind={demo} label={`Animated diagram of ${project.name}`} />
+          <p class="case__hint">Hover or tap to replay</p>
+        </div>
+      )
+    }
+
+    {
+      project.image && (
+        <figure class="case__shot" data-reveal>
+          <img src={project.image} alt={project.imageAlt ?? ""} width="1280" height="800" />
+          <figcaption>Screenshot of the project.</figcaption>
+        </figure>
+      )
+    }
+
+    <div class="case__grid">
+      <div class="case__main">
+        <section aria-labelledby="problem" data-reveal>
+          <h2 id="problem">The problem</h2>
+          <p>{project.problem}</p>
+        </section>
+
+        <section aria-labelledby="built" data-reveal>
+          <h2 id="built">What I built</h2>
+          <ol class="case__list">
+            {project.highlights.map((h) => <li data-reveal>{h}</li>)}
+          </ol>
+        </section>
+
+        <section aria-labelledby="result" class="case__result" data-reveal>
+          <h2 id="result">Result</h2>
+          <p>{project.impact}</p>
+        </section>
+      </div>
+
+      <aside class="case__side" aria-label="Project facts" data-reveal>
+        <dl class="facts">
+          <div>
+            <dt>Role</dt>
+            <dd>{project.role}</dd>
+          </div>
+          <div>
+            <dt>Type</dt>
+            <dd>{project.category}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd><span class={`status status--${project.status}`}>{STATUS_LABEL[project.status]}</span></dd>
+          </div>
+          {
+            project.stack.length > 0 && (
+              <div>
+                <dt>Built with</dt>
+                <dd>
+                  <ul class="stack">
+                    {project.stack.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+        <div class="case__links">
+          {
+            project.github && (
+              <a class="btn" href={project.github} target="_blank" rel="noopener noreferrer">
+                View source
+              </a>
+            )
+          }
+          {
+            project.npm && (
+              <a class="btn btn--quiet" href={project.npm} target="_blank" rel="noopener noreferrer">
+                View on npm
+              </a>
+            )
+          }
+          {
+            project.live && (
+              <a class="btn btn--quiet" href={project.live} target="_blank" rel="noopener noreferrer">
+                Open live site
+              </a>
+            )
+          }
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager" aria-label="More projects">
+      <a class="pager__link" href={`/projects/${prev.id}`} data-reveal>
+        <span class="pager__dir">Previous</span>
+        <span class="pager__name">{prev.name}</span>
+      </a>
+      <a class="pager__link pager__link--next" href={`/projects/${next.id}`} data-reveal>
+        <span class="pager__dir">Next</span>
+        <span class="pager__name">{next.name}</span>
+      </a>
+    </nav>
+  </article>
+  <Contact />
+</Base>
+
+<style>
+  .case {
+    padding-block: 24px 96px;
+  }
+
+  .case__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: var(--step--1);
+    font-weight: 500;
+    transition: color var(--dur-1) linear;
+  }
+
+  .case__back svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .case__back:hover {
+    color: var(--ink);
+  }
+
+  .case__back:hover svg {
+    transform: translateX(-4px);
+  }
+
+  .case__head {
+    display: grid;
+    gap: 12px;
+    padding-block: 32px 40px;
+  }
+
+  .case__kicker {
+    display: flex;
+    gap: 10px;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .case__title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+  }
+
+  .case__tagline {
+    font-size: var(--step-1);
+    color: var(--ink-2);
+  }
+
+  .case__stage {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: clamp(24px, 6vw, 64px);
+    margin-bottom: 56px;
+    border-radius: var(--r-lg);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+
+  .case__stage :global(.demo) {
+    max-width: 640px;
+  }
+
+  .case__stage :global(.demo--sudoku) {
+    max-width: 320px;
+  }
+
+  .case__hint {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .case__shot {
+    margin: 0 0 56px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .case__shot img {
+    width: auto;
+    max-width: 100%;
+    max-height: 640px;
+    height: auto;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .case__shot figcaption {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .case__grid {
+    display: grid;
+    gap: 48px;
+  }
+
+  @media (min-width: 960px) {
+    .case__grid {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 80px;
+    }
+
+    .case__side {
+      position: sticky;
+      top: 88px;
+      align-self: start;
+    }
+  }
+
+  .case__main {
+    display: grid;
+    gap: 48px;
+    max-width: 66ch;
+  }
+
+  .case__main section {
+    display: grid;
+    gap: 12px;
+  }
+
+  .case__main h2 {
+    font-size: var(--step-2);
+  }
+
+  .case__main p {
+    font-size: var(--step-1);
+    color: var(--ink-2);
+  }
+
+  .case__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    gap: 2px;
+  }
+
+  .case__list li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 8px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+
+  .case__list li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    padding-top: 2px;
+  }
+
+  .case__result {
+    padding: 24px;
+    border-radius: var(--r-md);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--signal);
+  }
+
+  .facts {
+    display: grid;
+    gap: 18px;
+    margin: 0 0 24px;
+  }
+
+  .facts dt {
+    color: var(--muted);
+    font-size: var(--step--1);
+    margin-bottom: 4px;
+  }
+
+  .facts dd {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stack li {
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: var(--step--1);
+    font-weight: 400;
+    transition: border-color var(--dur-1) linear, transform var(--dur-1) var(--ease-out);
+  }
+
+  .stack li:hover {
+    border-color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  .case__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pager {
+    display: grid;
+    gap: 12px;
+    margin-top: 96px;
+  }
+
+  @media (min-width: 720px) {
+    .pager {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .pager__link {
+    display: grid;
+    gap: 4px;
+    padding: 20px 24px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line);
+    background: var(--card);
+    text-decoration: none;
+    transition: transform var(--dur-2) var(--ease-out), border-color var(--dur-1) linear, box-shadow var(--dur-2) var(--ease-out);
+  }
+
+  .pager__link:hover {
+    transform: translateY(-3px);
+    border-color: var(--ink);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .pager__link--next {
+    text-align: right;
+  }
+
+  .pager__dir {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .pager__name {
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const stage = document.querySelector<HTMLElement>(".case__stage");
+    const demo = stage?.querySelector<HTMLElement>("[data-demo]");
+    if (!stage || !demo || stage.dataset.tap) return;
+    stage.dataset.tap = "1";
+    stage.addEventListener("click", () => {
+      demo.classList.remove("is-playing");
+      void demo.getBoundingClientRect();
+      demo.classList.add("is-playing");
+    });
+  });
+</script>

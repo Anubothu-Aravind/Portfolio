@@ -1,0 +1,449 @@
+/* hallmark: custom direction · chatty personal, matched to the reference palette (stone paper, orange highlight, pink resume, yellow ticker, green chat) · Geist / Geist Mono · signature: the chat thread that answers a recruiter's first four questions */
+/* critique: stone neutrals keep it calm; colour only marks what matters (the name, highlights, the resume, the ticker); small text keeps AA contrast via darker -text variants */
+
+:root {
+  --paper: #fafaf9;
+  --paper-2: #f5f5f4;
+  --card: #ffffff;
+  --ink: #292524;
+  --ink-2: #57534d;
+  --muted: #736b65;
+  --line: #e7e5e4;
+  --line-strong: #d6d3d1;
+  --mark: #fff085;
+  --mark-ink: #292524;
+  --mark-soft: #fccee8;
+  --name-bg: #cefafe;
+  --signal: #f54900;
+  --signal-soft: rgb(245 73 0 / 0.14);
+  --signal-text: #c43a00;
+  --on-signal: #ffffff;
+  --pink: #ffa1cc;
+  --pink-ink: #5f002c;
+  --scrim-top: rgb(10 30 60 / 0.15);
+  --scrim-bottom: rgb(10 30 60 / 0.35);
+  --shadow-photo: 0 20px 50px -20px rgb(0 0 0 / 0.6);
+  --ok: #497d00;
+  --warn: #9a4413;
+  --bubble-me: #e2f8cd;
+  --bubble-me-ink: #292524;
+  --bubble-them: #ffffff;
+  --shadow: 0 1px 0 rgb(41 37 36 / 0.04), 0 8px 24px -12px rgb(41 37 36 / 0.16);
+  --shadow-lift: 0 2px 0 rgb(41 37 36 / 0.05), 0 18px 40px -16px rgb(41 37 36 / 0.26);
+
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  --step-4: clamp(2.25rem, 1.4rem + 3.6vw, 4rem);
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  --container: 1200px;
+  --gutter: 16px;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+  --dur-1: 140ms;
+  --dur-2: 260ms;
+  --dur-3: 520ms;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1c1917;
+    --paper-2: #262220;
+    --card: #23201e;
+    --ink: #fafaf9;
+    --ink-2: #d6d3d1;
+    --muted: #a6a09b;
+    --line: #3a3533;
+    --line-strong: #57534d;
+    --mark: #fff085;
+    --mark-ink: #292524;
+    --mark-soft: rgb(246 51 154 / 0.3);
+    --name-bg: rgb(0 146 184 / 0.35);
+    --signal-text: #ff8a5c;
+    --bubble-me: #2c4a1f;
+    --bubble-me-ink: #ecfccb;
+    --bubble-them: #23201e;
+    --ok: #8bd450;
+    --warn: #f08a4b;
+    --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+    --shadow-lift: 0 2px 0 rgb(0 0 0 / 0.3), 0 18px 40px -16px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #1c1917;
+  --paper-2: #262220;
+  --card: #23201e;
+  --ink: #fafaf9;
+  --ink-2: #d6d3d1;
+  --muted: #a6a09b;
+  --line: #3a3533;
+  --line-strong: #57534d;
+  --mark: #fff085;
+  --mark-ink: #292524;
+  --mark-soft: rgb(246 51 154 / 0.3);
+  --name-bg: rgb(0 146 184 / 0.35);
+  --signal-text: #ff8a5c;
+  --bubble-me: #2c4a1f;
+  --bubble-me-ink: #ecfccb;
+  --bubble-them: #23201e;
+  --ok: #8bd450;
+  --warn: #f08a4b;
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 0 rgb(0 0 0 / 0.3), 0 18px 40px -16px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Scroll areas: thin, quiet scrollbars instead of the platform default */
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.scroll-none {
+  scrollbar-width: none;
+}
+
+.scroll-none::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: var(--mark);
+  color: var(--mark-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  transition: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* Links with a sweep underline */
+.link {
+  color: var(--ink);
+  text-decoration: none;
+  background-image: linear-gradient(var(--ink), var(--ink));
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--dur-2) var(--ease-out), color var(--dur-1) linear;
+}
+
+.link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+/* Buttons: one primary style, one quiet style */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--dur-1) var(--ease-out), background-color var(--dur-1) linear,
+    box-shadow var(--dur-2) var(--ease-out);
+}
+
+.btn:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn--quiet {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.btn--quiet:hover {
+  border-color: var(--ink);
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.btn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Section heads */
+.section {
+  padding-block: clamp(64px, 10vw, 128px);
+}
+
+.section-head {
+  display: grid;
+  gap: 12px;
+  margin-bottom: clamp(28px, 4vw, 48px);
+  max-width: 46ch;
+}
+
+.section-head h2 {
+  font-size: var(--step-3);
+}
+
+.section-head p {
+  color: var(--muted);
+  font-size: var(--step-1);
+}
+
+/* Highlighter mark */
+.mark {
+  background-image: linear-gradient(transparent 12%, var(--mark-soft) 12%, var(--mark-soft) 88%, transparent 88%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding-inline: 0.12em;
+  color: inherit;
+  border-radius: 3px;
+}
+
+/* Copy-to-clipboard label swap (shared) */
+.email__label {
+  grid-area: 1 / 1;
+  align-self: center;
+  transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+}
+
+.email__label--done {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+[data-copy].is-done [data-label-idle] {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+[data-copy].is-done [data-label-done] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-copy] {
+  display: inline-grid;
+}
+
+/* Elements driven by the tilt spring: CSS must not transition transform under it */
+[data-tilt] {
+  transition-property: box-shadow, border-color, background-color !important;
+  will-change: transform;
+}
+
+/* Status pill */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--step--1);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.status--in-use {
+  color: var(--ok);
+}
+
+.status--retired {
+  color: var(--warn);
+}
+
+/* Reveal: visible by default. Hidden only once the motion module is running (.motion-on),
+   so a failed script never leaves content invisible. */
+.motion-on [data-reveal]:not(.is-in) {
+  opacity: 0;
+}
+
+/* split headings: each word animates on its own */
+.w {
+  display: inline-block;
+}
+
+.motion-on [data-words]:not(.is-in) {
+  opacity: 0;
+}
+
+/* Hero: hidden for the first frame while the entrance starts, with a failsafe */
+.motion-pending [data-hero]:not(.is-ready) :is(.sheet, .hero__chat) {
+  opacity: 0;
+  animation: failsafe-show 0s 1.8s forwards;
+}
+
+@keyframes failsafe-show {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .motion-on [data-reveal]:not(.is-in),
+  .motion-on [data-words]:not(.is-in) {
+    opacity: 1;
+  }
+}

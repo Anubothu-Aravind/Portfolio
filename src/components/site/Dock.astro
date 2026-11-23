@@ -1,0 +1,214 @@
+---
+import { personal } from "@/data/portfolio";
+
+const onHome = Astro.url.pathname === "/";
+const href = (hash: string) => (onHome ? hash : `/${hash}`);
+---
+
+<nav class="dock" aria-label="Main" data-dock data-always={onHome ? undefined : "1"} transition:persist>
+  <a class="dock__brand" href="/" aria-label="Aravind Anubothu, home">
+    <span class="dock__dot" aria-hidden="true"></span>aravind
+  </a>
+  <a class="dock__link dock__hide-sm" href={href("#work")}>work</a>
+  <a class="dock__link dock__hide-sm" href={href("#story")}>story</a>
+  <a class="dock__resume" href="/resume.pdf" download="Anubothu_Aravind_Resume.pdf">
+    resume
+    <svg viewBox="0 0 24 24" aria-hidden="true"
+      ><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2"
+      stroke-linecap="round" stroke-linejoin="round"></path></svg
+    >
+  </a>
+  <button class="dock__hi" type="button" data-copy={personal.email} aria-label="Copy email address">
+    <span class="email__label" data-label-idle>say hi</span>
+    <span class="email__label email__label--done" data-label-done aria-hidden="true">copied</span>
+  </button>
+  <button class="dock__theme" type="button" aria-label="Switch colour theme" data-theme-toggle>
+    <svg class="dock__sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+      <path
+        d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"></path>
+    </svg>
+    <svg class="dock__moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20 14.2A8 8 0 0 1 9.8 4a8 8 0 1 0 10.2 10.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--card) 86%, transparent);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lift);
+    transform: translate(-50%, 0);
+    transition: transform var(--dur-3) var(--ease-spring), opacity var(--dur-2) linear;
+  }
+
+  :global(.js) .dock:not(.is-shown):not([data-always]) {
+    transform: translate(-50%, 140%);
+    opacity: 0;
+  }
+
+  .dock a,
+  .dock button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    border: 0;
+    background: transparent;
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--dur-1) linear, transform var(--dur-1) var(--ease-out), color var(--dur-1) linear;
+  }
+
+  .dock a:hover,
+  .dock button:hover {
+    background: var(--paper-2);
+  }
+
+  .dock a:active,
+  .dock button:active {
+    transform: scale(0.94);
+  }
+
+  .dock__brand {
+    font-weight: 800 !important;
+  }
+
+  .dock__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    transition: transform var(--dur-2) var(--ease-spring);
+  }
+
+  .dock__brand:hover .dock__dot {
+    transform: scale(1.6);
+  }
+
+  .dock__link {
+    color: var(--ink-2);
+  }
+
+  .dock__resume {
+    background: var(--pink) !important;
+    color: var(--pink-ink);
+  }
+
+  .dock__resume:hover {
+    background: var(--pink) !important;
+    filter: brightness(1.06);
+  }
+
+  .dock__resume svg {
+    width: 15px;
+    height: 15px;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .dock__resume:hover svg {
+    transform: translateY(2px);
+  }
+
+  .dock__hi {
+    display: inline-grid !important;
+  }
+
+  .dock__hi.is-done {
+    background: var(--mark) !important;
+    color: var(--mark-ink);
+  }
+
+  .dock__theme {
+    position: relative;
+    width: 40px;
+    padding: 0 !important;
+    justify-content: center;
+  }
+
+  .dock__theme svg {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+  }
+
+  .dock__moon {
+    opacity: 0;
+    transform: rotate(-60deg) scale(0.6);
+  }
+
+  :global([data-scheme="dark"]) .dock__sun {
+    opacity: 0;
+    transform: rotate(60deg) scale(0.6);
+  }
+
+  :global([data-scheme="dark"]) .dock__moon {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 480px) {
+    .dock__hide-sm {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const scheme = () => {
+    const d = document.documentElement;
+    const explicit = d.dataset.theme;
+    const dark = explicit ? explicit === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    d.dataset.scheme = dark ? "dark" : "light";
+    return dark;
+  };
+
+  const wire = () => {
+    scheme();
+    const dock = document.querySelector<HTMLElement>("[data-dock]");
+    if (!dock) return;
+    const home = location.pathname === "/";
+    if (home) dock.removeAttribute("data-always");
+    else dock.dataset.always = "1";
+
+    if (!dock.dataset.wired) {
+      dock.dataset.wired = "1";
+      const btn = dock.querySelector<HTMLButtonElement>("[data-theme-toggle]")!;
+      btn.addEventListener("click", () => {
+        const next = scheme() ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem("theme", next);
+        } catch {}
+        scheme();
+      });
+      const onScroll = () => dock.classList.toggle("is-shown", window.scrollY > window.innerHeight * 0.35);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+  };
+
+  document.addEventListener("astro:page-load", wire);
+  document.addEventListener("astro:after-swap", scheme);
+</script>
