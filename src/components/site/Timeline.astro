@@ -60,9 +60,13 @@ const data = JSON.stringify(periods);
     <!-- Scrolling through the track steps the pinned board from the first chapter to the last -->
     <div class="tl__track" data-tl-track>
     <div class="tl__pin" data-tl-pin>
-    <h2 id="story-title" class="tl__title" data-words>
-      <span class="tl__accent">how i got here</span>, one chapter at a time.<span class="tl__hint"> point at a year.</span>
-    </h2>
+    <div class="tl__head">
+      <h2 id="story-title" class="tl__title" data-words>
+        <span class="tl__accent">how i got here</span>, one chapter at a time.<span class="tl__hint"> point at a year.</span>
+      </h2>
+      <!-- for anyone skimming: straight past the story to the full project list -->
+      <a class="tl__skip" href="#archive">skip to all projects</a>
+    </div>
 
     <!-- Interactive board (desktop). Built by the script from the data below. -->
     <div class="tlb" data-tlb hidden>
@@ -161,9 +165,54 @@ const data = JSON.stringify(periods);
     color: var(--signal-text);
   }
 
+  .tl__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+
+  .tl__skip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: var(--card);
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: border-color var(--dur-1) linear, box-shadow var(--dur-2) var(--ease-out), transform var(--dur-1) var(--ease-out);
+  }
+
+  .tl__skip:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+
+  .tl__skip:active {
+    transform: scale(0.96);
+  }
+
+  .tl__skip:focus-visible {
+    outline: 2px solid var(--signal-text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tl__skip {
+      transition: none;
+    }
+  }
+
   /* ---------- scroll mode: the board pins and the chapters advance with the scroll ---------- */
   .tl.is-scrolly .tl__track {
-    height: calc(100svh + var(--steps) * 60svh);
+    /* about 40% of a screen per chapter: enough to read each one, short enough for a skim */
+    height: calc(100svh + var(--steps) * 40svh);
   }
 
   .tl.is-scrolly .tl__pin {
@@ -174,6 +223,17 @@ const data = JSON.stringify(periods);
     justify-content: center;
     min-height: 100svh;
     padding-block: 24px 88px;
+  }
+
+  /* phones: the dock is shorter, so the pinned view can keep more of the screen */
+  @media (max-width: 860px) {
+    .tl.is-scrolly .tl__pin {
+      padding-block: 12px 76px;
+    }
+
+    .tl__skip {
+      min-height: 36px;
+    }
   }
 
   /* ---------- desktop board ---------- */
@@ -1113,6 +1173,13 @@ const data = JSON.stringify(periods);
 
     let reached = step();
     ctl()?.rest(reached);
+    // the fit check above ran with fallback fonts; check again once the real ones have loaded
+    document.fonts?.ready.then(() => {
+      if (ac.signal.aborted) return;
+      setScrolly();
+      reached = step();
+      ctl()?.rest(reached);
+    });
     // one rect read per scroll event; the chapter only changes when the step does
     const onScroll = () => {
       const i = step();

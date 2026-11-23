@@ -5,8 +5,8 @@ import { animate, stagger, EASE, reducedMotion, getLenis, jumpTo } from "./motio
  *  - Wheel input is grouped into gestures (a new one after a 160ms gap or a direction change).
  *    A gesture must travel 36px before it acts, and acts once, so trackpad inertia can't double-fire.
  *  - At the hero, scrolling down plays a choreographed hand-off: the chat and story leave,
- *    the paper sheet grows to fill the screen, and the page lands on the work section.
- *    Scrolling up from the top of work plays it backwards.
+ *    the paper sheet grows to fill the screen, and the page lands on the next section (jobs).
+ *    Scrolling up from the top of that section plays it backwards.
  *  - Everywhere else, scrolling is untouched. (The timeline below pins and steps through its
  *    chapters with plain scrolling, so it needs no glide of its own, in either direction.)
  */
@@ -22,7 +22,8 @@ const IN = { shrink: 0.8, copyInAt: 0.3, copyIn: 0.85, copyStagger: 0.04 };
 
 export const initGate = () => {
   const hero = document.querySelector<HTMLElement>("[data-hero]");
-  const work = document.querySelector<HTMLElement>("#work");
+  // the hand-off lands on whatever section follows the hero (jobs, today)
+  const work = document.querySelector<HTMLElement>("[data-hero] ~ section");
   const veil = document.querySelector<HTMLElement>("[data-gate-veil]");
   if (!hero || !work || !veil || hero.dataset.gate) return;
   hero.dataset.gate = "1";
@@ -60,6 +61,12 @@ export const initGate = () => {
     busy = false;
   };
 
+  // the veil fills to the landing section's own background, so the hand-off ends without a colour jump
+  const land = () => {
+    const c = getComputedStyle(work).backgroundColor;
+    return c === "transparent" || c === "rgba(0, 0, 0, 0)" ? token("--paper") : c;
+  };
+
   // Where the hero's last screen begins: on short screens the hero is taller than the viewport
   const heroEnd = () => Math.max(0, top(work) - window.innerHeight);
 
@@ -78,7 +85,7 @@ export const initGate = () => {
       veil.style.opacity = "1";
       await animate(
         veil,
-        { clipPath: [clip, FULL], backgroundColor: [token("--card"), token("--paper")] },
+        { clipPath: [clip, FULL], backgroundColor: [token("--card"), land()] },
         { duration: OUT.grow, ease: e("travel"), delay: OUT.growAt }
       );
       jumpTo(top(work));
@@ -96,7 +103,7 @@ export const initGate = () => {
     getLenis()?.stop();
     try {
       veil.style.clipPath = FULL;
-      veil.style.backgroundColor = token("--paper");
+      veil.style.backgroundColor = land();
       veil.style.opacity = "1";
       veil.style.visibility = "visible";
       const parts = [...copyParts(), ...chatParts()];
@@ -110,7 +117,7 @@ export const initGate = () => {
         { duration: IN.copyIn, ease: e("arrive"), delay: stagger(IN.copyStagger, { startDelay: IN.copyInAt + 0.2 }) }
       );
       animate(chatParts(), { opacity: [0, 1], y: [18, 0] }, { duration: 0.6, ease: e("arrive"), delay: stagger(0.03, { startDelay: IN.copyInAt + 0.3 }) });
-      await animate(veil, { clipPath: [FULL, clip], backgroundColor: [token("--paper"), token("--card")] }, { duration: IN.shrink, ease: e("travel") });
+      await animate(veil, { clipPath: [FULL, clip], backgroundColor: [land(), token("--card")] }, { duration: IN.shrink, ease: e("travel") });
       await animate(veil, { opacity: 0 }, { duration: 0.18 });
     } finally {
       showHero();
